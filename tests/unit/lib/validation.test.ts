@@ -16,11 +16,7 @@ import { z } from 'zod';
 describe('Validation Schemas', () => {
   describe('emailSchema', () => {
     it('should validate correct email addresses', () => {
-      const validEmails = [
-        'test@example.com',
-        'user.name@domain.co.uk',
-        'user+tag@example.org',
-      ];
+      const validEmails = ['test@example.com', 'user.name@domain.co.uk', 'user+tag@example.org'];
 
       validEmails.forEach(email => {
         expect(() => emailSchema.parse(email)).not.toThrow();
@@ -28,13 +24,7 @@ describe('Validation Schemas', () => {
     });
 
     it('should reject invalid email addresses', () => {
-      const invalidEmails = [
-        '',
-        'invalid-email',
-        '@example.com',
-        'user@',
-        'user@.com',
-      ];
+      const invalidEmails = ['', 'invalid-email', '@example.com', 'user@', 'user@.com'];
 
       invalidEmails.forEach(email => {
         expect(() => emailSchema.parse(email)).toThrow();
@@ -44,11 +34,7 @@ describe('Validation Schemas', () => {
 
   describe('passwordSchema', () => {
     it('should validate strong passwords', () => {
-      const validPasswords = [
-        'Password123',
-        'MyStr0ngP@ss',
-        'Complex1Password',
-      ];
+      const validPasswords = ['Password123', 'MyStr0ngP@ss', 'Complex1Password'];
 
       validPasswords.forEach(password => {
         expect(() => passwordSchema.parse(password)).not.toThrow();
@@ -198,11 +184,11 @@ describe('Validation Helper Functions', () => {
     it('should handle errors with no issues gracefully', () => {
       // Create a ZodError with empty issues by using an always-passing schema
       const schema = z.string().optional();
-      
+
       try {
         // This should not throw, but if it did, we'd handle it
         schema.parse(undefined);
-        
+
         // Create a minimal ZodError-like object for testing edge cases
         const mockError = new z.ZodError([]);
         const result = formatValidationErrors(mockError);

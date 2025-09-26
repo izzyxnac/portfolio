@@ -22,34 +22,34 @@ export const ANIMATION_EASINGS = {
 // Common animation variants for Framer Motion
 export const FADE_IN_VARIANTS = {
   hidden: { opacity: 0 },
-  visible: { 
+  visible: {
     opacity: 1,
-    transition: { duration: ANIMATION_DURATIONS.normal }
-  }
+    transition: { duration: ANIMATION_DURATIONS.normal },
+  },
 };
 
 export const SLIDE_UP_VARIANTS = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { 
+    transition: {
       duration: ANIMATION_DURATIONS.normal,
-      ease: ANIMATION_EASINGS.easeOut
-    }
-  }
+      ease: ANIMATION_EASINGS.easeOut,
+    },
+  },
 };
 
 export const SCALE_IN_VARIANTS = {
   hidden: { opacity: 0, scale: 0.95 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     scale: 1,
-    transition: { 
+    transition: {
       duration: ANIMATION_DURATIONS.fast,
-      ease: ANIMATION_EASINGS.easeOut
-    }
-  }
+      ease: ANIMATION_EASINGS.easeOut,
+    },
+  },
 };
 
 export const STAGGER_CONTAINER_VARIANTS = {
@@ -58,62 +58,62 @@ export const STAGGER_CONTAINER_VARIANTS = {
     opacity: 1,
     transition: {
       staggerChildren: 0.1,
-      delayChildren: 0.1
-    }
-  }
+      delayChildren: 0.1,
+    },
+  },
 };
 
 export const STAGGER_ITEM_VARIANTS = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { 
+    transition: {
       duration: ANIMATION_DURATIONS.normal,
-      ease: ANIMATION_EASINGS.easeOut
-    }
-  }
+      ease: ANIMATION_EASINGS.easeOut,
+    },
+  },
 };
 
 // Page transition variants
 export const PAGE_TRANSITION_VARIANTS = {
   initial: { opacity: 0, x: -20 },
-  animate: { 
-    opacity: 1, 
+  animate: {
+    opacity: 1,
     x: 0,
-    transition: { 
+    transition: {
       duration: ANIMATION_DURATIONS.normal,
-      ease: ANIMATION_EASINGS.easeOut
-    }
+      ease: ANIMATION_EASINGS.easeOut,
+    },
   },
-  exit: { 
-    opacity: 0, 
+  exit: {
+    opacity: 0,
     x: 20,
-    transition: { 
+    transition: {
       duration: ANIMATION_DURATIONS.fast,
-      ease: ANIMATION_EASINGS.easeIn
-    }
-  }
+      ease: ANIMATION_EASINGS.easeIn,
+    },
+  },
 };
 
 // Hover and interaction animations
 export const HOVER_SCALE_VARIANTS = {
   rest: { scale: 1 },
-  hover: { 
+  hover: {
     scale: 1.05,
-    transition: { 
+    transition: {
       duration: ANIMATION_DURATIONS.fast,
-      ease: ANIMATION_EASINGS.easeOut
-    }
-  }
+      ease: ANIMATION_EASINGS.easeOut,
+    },
+  },
 };
 
 export const BUTTON_TAP_VARIANTS = {
-  tap: { 
+  tap: {
     scale: 0.95,
-    transition: { 
+    transition: {
       duration: ANIMATION_DURATIONS.fast,
-      ease: ANIMATION_EASINGS.easeOut
-    }
-  }
+      ease: ANIMATION_EASINGS.easeOut,
+    },
+  },
 };
