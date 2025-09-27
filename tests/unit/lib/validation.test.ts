@@ -13,7 +13,7 @@ import {
 } from '@/lib/utils/validation';
 import { z } from 'zod';
 
-describe('Validation Schemas', () => {
+function testEmailSchema() {
   describe('emailSchema', () => {
     it('should validate correct email addresses', () => {
       const validEmails = ['test@example.com', 'user.name@domain.co.uk', 'user+tag@example.org'];
@@ -31,7 +31,9 @@ describe('Validation Schemas', () => {
       });
     });
   });
+}
 
+function testPasswordSchema() {
   describe('passwordSchema', () => {
     it('should validate strong passwords', () => {
       const validPasswords = ['Password123', 'MyStr0ngP@ss', 'Complex1Password'];
@@ -47,7 +49,8 @@ describe('Validation Schemas', () => {
         'nouppercase123',
         'NOLOWERCASE123',
         'NoNumbers',
-        'password', // too simple
+        // too simple
+        'password',
       ];
 
       invalidPasswords.forEach(password => {
@@ -55,14 +58,18 @@ describe('Validation Schemas', () => {
       });
     });
   });
+}
 
+function testNameSchema() {
   describe('nameSchema', () => {
     it('should validate proper names', () => {
       const validNames = [
         'John Doe',
         'Mary Jane',
-        'Jean Pierre', // Remove hyphen as it's not allowed in our regex
-        'OConnor', // Remove apostrophe as it's not allowed in our regex
+        // Remove hyphen as it's not allowed in our regex
+        'Jean Pierre',
+        // Remove apostrophe as it's not allowed in our regex
+        'OConnor',
       ];
 
       validNames.forEach(name => {
@@ -72,10 +79,14 @@ describe('Validation Schemas', () => {
 
     it('should reject invalid names', () => {
       const invalidNames = [
-        'A', // too short
-        'John123', // contains numbers
-        'Name@Domain', // contains special chars
-        'a'.repeat(51), // too long
+        // too short
+        'A',
+        // contains numbers
+        'John123',
+        // contains special chars
+        'Name@Domain',
+        // too long
+        'a'.repeat(51),
       ];
 
       invalidNames.forEach(name => {
@@ -83,7 +94,9 @@ describe('Validation Schemas', () => {
       });
     });
   });
+}
 
+function testFormSchemas() {
   describe('contactFormSchema', () => {
     it('should validate complete contact form data', () => {
       const validData: ContactFormData = {
@@ -99,10 +112,13 @@ describe('Validation Schemas', () => {
 
     it('should reject incomplete contact form data', () => {
       const invalidData = {
-        name: 'A', // too short
+        // too short
+        name: 'A',
         email: 'invalid-email',
-        subject: 'Hi', // too short
-        message: 'Short', // too short
+        // too short
+        subject: 'Hi',
+        // too short
+        message: 'Short',
       };
 
       expect(() => contactFormSchema.parse(invalidData)).toThrow();
@@ -127,9 +143,16 @@ describe('Validation Schemas', () => {
       expect(() => newsletterSchema.parse(validData)).not.toThrow();
     });
   });
+}
+
+describe('Validation Schemas', () => {
+  testEmailSchema();
+  testPasswordSchema();
+  testNameSchema();
+  testFormSchemas();
 });
 
-describe('Validation Helper Functions', () => {
+function testValidateEmail() {
   describe('validateEmail', () => {
     it('should return true for valid emails', () => {
       expect(validateEmail('test@example.com')).toBe(true);
@@ -142,12 +165,15 @@ describe('Validation Helper Functions', () => {
       expect(validateEmail('@example.com')).toBe(false);
     });
   });
+}
 
+function testValidateUrl() {
   describe('validateUrl', () => {
     it('should return true for valid URLs', () => {
       expect(validateUrl('https://example.com')).toBe(true);
       expect(validateUrl('http://localhost:3000')).toBe(true);
-      expect(validateUrl('')).toBe(true); // empty is allowed
+      // empty is allowed
+      expect(validateUrl('')).toBe(true);
     });
 
     it('should return false for invalid URLs', () => {
@@ -155,7 +181,9 @@ describe('Validation Helper Functions', () => {
       expect(validateUrl('just-text')).toBe(false);
     });
   });
+}
 
+function testFormatValidationErrors() {
   describe('formatValidationErrors', () => {
     it('should format Zod errors correctly', () => {
       const schema = z.object({
@@ -202,4 +230,10 @@ describe('Validation Helper Functions', () => {
       }
     });
   });
+}
+
+describe('Validation Helper Functions', () => {
+  testValidateEmail();
+  testValidateUrl();
+  testFormatValidationErrors();
 });

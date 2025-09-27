@@ -58,7 +58,8 @@ export interface Technology {
   id: string;
   name: string;
   category: TechnologyCategory;
-  proficiency: 1 | 2 | 3 | 4 | 5; // 1 = Beginner, 5 = Expert
+  // 1 = Beginner, 5 = Expert
+  proficiency: 1 | 2 | 3 | 4 | 5;
   yearsOfExperience: number;
   icon?: string;
   color?: string;
@@ -89,7 +90,8 @@ export interface BlogPost extends BaseModel {
   author: Author;
   seo: SEOData;
   images: BlogImage[];
-  relatedPosts?: string[]; // Array of post IDs
+  // Array of post IDs
+  relatedPosts?: string[];
 }
 
 export interface BlogImage {

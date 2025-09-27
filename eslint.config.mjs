@@ -43,6 +43,9 @@ const eslintConfig = [
       'no-inline-comments': 'warn',
       'spaced-comment': ['error', 'always'],
 
+      // TypeScript specific rules
+      '@typescript-eslint/no-empty-object-type': 'off',
+
       // Code organization rules
       'max-len': [
         'warn',

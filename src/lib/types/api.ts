@@ -39,7 +39,7 @@ export interface ContactFormRequest {
   phone?: string;
 }
 
-export interface ContactFormResponse extends ApiResponse<{ id: string }> {}
+export type ContactFormResponse = ApiResponse<{ id: string }>;
 
 // Newsletter subscription API types
 export interface NewsletterSubscriptionRequest {
@@ -47,7 +47,7 @@ export interface NewsletterSubscriptionRequest {
   firstName?: string;
 }
 
-export interface NewsletterSubscriptionResponse extends ApiResponse<{ subscribed: boolean }> {}
+export type NewsletterSubscriptionResponse = ApiResponse<{ subscribed: boolean }>;
 
 // Analytics API types
 export interface AnalyticsEvent {
@@ -56,7 +56,7 @@ export interface AnalyticsEvent {
   timestamp?: string;
 }
 
-export interface AnalyticsResponse extends ApiResponse<{ tracked: boolean }> {}
+export type AnalyticsResponse = ApiResponse<{ tracked: boolean }>;
 
 // Search API types
 export interface SearchRequest {
@@ -75,7 +75,7 @@ export interface SearchResult {
   relevance: number;
 }
 
-export interface SearchResponse extends PaginatedResponse<SearchResult> {}
+export type SearchResponse = PaginatedResponse<SearchResult>;
 
 // Project submission API types (for potential client projects)
 export interface ProjectSubmissionRequest {
@@ -89,4 +89,4 @@ export interface ProjectSubmissionRequest {
   website?: string;
 }
 
-export interface ProjectSubmissionResponse extends ApiResponse<{ id: string; status: string }> {}
+export type ProjectSubmissionResponse = ApiResponse<{ id: string; status: string }>;

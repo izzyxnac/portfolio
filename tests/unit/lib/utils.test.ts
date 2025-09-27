@@ -16,7 +16,8 @@ describe('Utils', () => {
     it('should merge Tailwind classes correctly', () => {
       // twMerge should handle conflicting Tailwind classes
       const result = cn('p-4', 'p-6');
-      expect(result).toBe('p-6'); // Later class should override
+      // Later class should override
+      expect(result).toBe('p-6');
     });
 
     it('should handle arrays of classes', () => {
@@ -52,7 +53,8 @@ describe('Utils', () => {
       expect(result2).toBe('text-lg');
 
       const result3 = cn('p-2', 'px-4');
-      expect(result3).toBe('p-2 px-4'); // px-4 should override x-axis padding
+      // px-4 should override x-axis padding
+      expect(result3).toBe('p-2 px-4');
     });
 
     it('should preserve non-conflicting classes', () => {

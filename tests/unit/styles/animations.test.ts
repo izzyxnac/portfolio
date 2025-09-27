@@ -12,7 +12,7 @@ import {
   BUTTON_TAP_VARIANTS,
 } from '@/styles/themes/animations';
 
-describe('Animation Configurations', () => {
+function testAnimationDurations() {
   describe('ANIMATION_DURATIONS', () => {
     it('should have all required duration constants', () => {
       expect(ANIMATION_DURATIONS).toHaveProperty('fast');
@@ -32,7 +32,9 @@ describe('Animation Configurations', () => {
       expect(ANIMATION_DURATIONS.slow).toBeLessThan(ANIMATION_DURATIONS.slower);
     });
   });
+}
 
+function testAnimationEasings() {
   describe('ANIMATION_EASINGS', () => {
     it('should have all required easing functions', () => {
       expect(ANIMATION_EASINGS).toHaveProperty('easeInOut');
@@ -51,7 +53,9 @@ describe('Animation Configurations', () => {
       });
     });
   });
+}
 
+function testFadeInVariants() {
   describe('FADE_IN_VARIANTS', () => {
     it('should have hidden and visible states', () => {
       expect(FADE_IN_VARIANTS).toHaveProperty('hidden');
@@ -68,7 +72,9 @@ describe('Animation Configurations', () => {
       expect(FADE_IN_VARIANTS.visible.transition).toHaveProperty('duration');
     });
   });
+}
 
+function testSlideUpVariants() {
   describe('SLIDE_UP_VARIANTS', () => {
     it('should have hidden and visible states', () => {
       expect(SLIDE_UP_VARIANTS).toHaveProperty('hidden');
@@ -82,7 +88,9 @@ describe('Animation Configurations', () => {
       expect(SLIDE_UP_VARIANTS.visible).toHaveProperty('y', 0);
     });
   });
+}
 
+function testScaleInVariants() {
   describe('SCALE_IN_VARIANTS', () => {
     it('should animate scale and opacity', () => {
       expect(SCALE_IN_VARIANTS.hidden).toHaveProperty('opacity', 0);
@@ -91,7 +99,9 @@ describe('Animation Configurations', () => {
       expect(SCALE_IN_VARIANTS.visible).toHaveProperty('scale', 1);
     });
   });
+}
 
+function testStaggerVariants() {
   describe('STAGGER_CONTAINER_VARIANTS', () => {
     it('should have stagger configuration', () => {
       expect(STAGGER_CONTAINER_VARIANTS.visible.transition).toHaveProperty('staggerChildren');
@@ -118,7 +128,9 @@ describe('Animation Configurations', () => {
       expect(STAGGER_ITEM_VARIANTS.visible).toHaveProperty('y', 0);
     });
   });
+}
 
+function testInteractionVariants() {
   describe('PAGE_TRANSITION_VARIANTS', () => {
     it('should have initial, animate, and exit states', () => {
       expect(PAGE_TRANSITION_VARIANTS).toHaveProperty('initial');
@@ -154,4 +166,14 @@ describe('Animation Configurations', () => {
       expect(BUTTON_TAP_VARIANTS.tap.scale).toBeLessThan(1);
     });
   });
+}
+
+describe('Animation Configurations', () => {
+  testAnimationDurations();
+  testAnimationEasings();
+  testFadeInVariants();
+  testSlideUpVariants();
+  testScaleInVariants();
+  testStaggerVariants();
+  testInteractionVariants();
 });
