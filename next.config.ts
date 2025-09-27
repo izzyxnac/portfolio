@@ -12,19 +12,19 @@ const nextConfig: NextConfig = {
     // your project has ESLint errors. Only disable in development.
     ignoreDuringBuilds: false,
   },
+  // Enable turbopack for faster builds
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
+  },
   // Enable experimental features for better development experience
   experimental: {
     // Enable faster refresh for better hot reload
     optimizePackageImports: ['lucide-react', 'framer-motion'],
-    // Enable turbopack for faster builds
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
-      },
-    },
   },
   // Webpack configuration for better development experience
   webpack: (config, { dev, isServer }) => {
