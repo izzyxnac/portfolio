@@ -11,12 +11,12 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "type-check": "tsc --noEmit",
-    "test": "vitest",
-    "test:unit": "vitest run",
+    "test": "vitest --config vitest.config.mjs",
+    "test:unit": "vitest run --config vitest.config.mjs",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:e2e": "playwright test",
-    "test:watch": "vitest --watch",
-    "test:ui": "vitest --ui"
+    "test:watch": "vitest --watch --config vitest.config.mjs",
+    "test:ui": "vitest --ui --config vitest.config.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
