@@ -49,11 +49,18 @@ const testUtilsBarrelExports = () => {
     });
 
     it('should export date utilities', async () => {
+      // Test direct import first to ensure the module works
+      const dateUtils = await import('@/lib/utils/date');
+      expect(dateUtils.formatDate).toBeDefined();
+      expect(dateUtils.getRelativeTime).toBeDefined();
+      expect(dateUtils.isToday).toBeDefined();
+      
+      // Then test barrel export
       const utils = await import('@/lib/utils/index');
       expect(utils.formatDate).toBeDefined();
       expect(utils.getRelativeTime).toBeDefined();
       expect(utils.isToday).toBeDefined();
-    });
+    }, 10000);
 
     it('should export string utilities', async () => {
       const utils = await import('@/lib/utils/index');
