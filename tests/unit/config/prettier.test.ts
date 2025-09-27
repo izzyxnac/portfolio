@@ -42,7 +42,7 @@ const   test    =     "hello world"   ;
 
       const formatted = await formatCode(unformattedCode, 'typescript');
 
-      expect(formatted).toContain("const test = ");
+      expect(formatted).toContain('const test = ');
       expect(formatted).toContain('const another = 42;');
       expect(formatted).not.toContain('  test    =');
       expect(formatted).toContain('hello world');

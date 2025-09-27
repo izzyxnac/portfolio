@@ -8,7 +8,7 @@ describe('ESLint Configuration', () => {
   describe('Configuration Loading', () => {
     it('should have ESLint configuration file', () => {
       expect(fs.existsSync(configPath)).toBe(true);
-      
+
       const configContent = fs.readFileSync(configPath, 'utf-8');
       expect(configContent).toContain('next/core-web-vitals');
       expect(configContent).toContain('prettier');
@@ -18,7 +18,7 @@ describe('ESLint Configuration', () => {
   describe('Configuration Content', () => {
     it('should have proper rule configuration', () => {
       const configContent = fs.readFileSync(configPath, 'utf-8');
-      
+
       // Check for key rules
       expect(configContent).toContain('prefer-const');
       expect(configContent).toContain('no-var');
@@ -28,7 +28,7 @@ describe('ESLint Configuration', () => {
 
     it('should have TypeScript and React support', () => {
       const configContent = fs.readFileSync(configPath, 'utf-8');
-      
+
       expect(configContent).toContain('**/*.ts');
       expect(configContent).toContain('**/*.tsx');
       expect(configContent).toContain('react/react-in-jsx-scope');
@@ -36,7 +36,7 @@ describe('ESLint Configuration', () => {
 
     it('should have proper ignores configured', () => {
       const configContent = fs.readFileSync(configPath, 'utf-8');
-      
+
       expect(configContent).toContain('node_modules/**');
       expect(configContent).toContain('.next/**');
       expect(configContent).toContain('build/**');
