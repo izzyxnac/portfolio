@@ -9,16 +9,9 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   plugins: [react()],
-  optimizeDeps: {
-    esbuildOptions: {
-      define: {
-        global: 'globalThis',
-      },
-    },
-  },
   test: {
     environment: 'jsdom',
-    setupFiles: ['./vitest.polyfills.ts', './vitest.setup.ts'],
+    setupFiles: ['./vitest.setup.ts'],
     globals: true,
     include: ['./tests/unit/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     exclude: ['./tests/e2e/**/*', './tests/integration/**/*'],
