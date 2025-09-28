@@ -8,6 +8,13 @@ dotenv.config({ path: '.env.local' });
 
 export default defineConfig({
   plugins: [react()],
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: 'globalThis',
+      },
+    },
+  },
   test: {
     environment: 'jsdom',
     setupFiles: ['./vitest.polyfills.ts', './vitest.setup.ts'],
