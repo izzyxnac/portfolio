@@ -66,7 +66,7 @@ test.describe('Deployment Verification', () => {
     await expect(page.locator('main')).toBeVisible();
 
     // Check that navigation works on mobile
-    const nav = page.locator('nav');
+    const nav = page.locator('nav').first();
     if (await nav.isVisible()) {
       await expect(nav).toBeVisible();
     }

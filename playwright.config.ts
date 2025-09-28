@@ -35,27 +35,62 @@ const config = defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        extraHTTPHeaders: process.env.VERCEL_PROTECTION_BYPASS
+          ? {
+              'x-vercel-protection-bypass': process.env.VERCEL_PROTECTION_BYPASS,
+            }
+          : {},
+      },
     },
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: {
+        ...devices['Desktop Firefox'],
+        extraHTTPHeaders: process.env.VERCEL_PROTECTION_BYPASS
+          ? {
+              'x-vercel-protection-bypass': process.env.VERCEL_PROTECTION_BYPASS,
+            }
+          : {},
+      },
     },
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: {
+        ...devices['Desktop Safari'],
+        extraHTTPHeaders: process.env.VERCEL_PROTECTION_BYPASS
+          ? {
+              'x-vercel-protection-bypass': process.env.VERCEL_PROTECTION_BYPASS,
+            }
+          : {},
+      },
     },
 
     /* Test against mobile viewports. */
     {
       name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
+      use: {
+        ...devices['Pixel 5'],
+        extraHTTPHeaders: process.env.VERCEL_PROTECTION_BYPASS
+          ? {
+              'x-vercel-protection-bypass': process.env.VERCEL_PROTECTION_BYPASS,
+            }
+          : {},
+      },
     },
     {
       name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
+      use: {
+        ...devices['iPhone 12'],
+        extraHTTPHeaders: process.env.VERCEL_PROTECTION_BYPASS
+          ? {
+              'x-vercel-protection-bypass': process.env.VERCEL_PROTECTION_BYPASS,
+            }
+          : {},
+      },
     },
 
     /* Test against branded browsers. */
