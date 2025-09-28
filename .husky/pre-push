@@ -1,0 +1,19 @@
+echo "🚀  Running pre-push checks..."
+
+# Run comprehensive quality checks
+echo "📋  Running linting..."
+npm run lint
+
+echo "🎨 Checking code formatting..."
+npm run format:check
+
+echo "🔧  Running TypeScript type checking..."
+npm run type-check
+
+echo "🧪  Running unit tests..."
+npm run test:unit
+
+echo "🏗️  Testing build..."
+npm run build
+
+echo "✅ All pre-push checks passed! Ready to push to GitHub."
