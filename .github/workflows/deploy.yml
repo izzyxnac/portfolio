@@ -212,19 +212,66 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Wait for deployment to be available
+        env:
+          VERCEL_PROTECTION_BYPASS: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
         run: |
           echo "Waiting for deployment to be available..."
           target_url="${{ steps.deploy.outputs.production-domain }}"
           echo "Testing URL: $target_url"
 
           for i in {1..30}; do
-            if curl -s -f -o /dev/null "$target_url"; then
-              echo "✅ Site is available at $target_url"
-              break
+            if [ -n "$VERCEL_PROTECTION_BYPASS" ]; then
+              # Use bypass token if available
+              if curl -s -f -o /dev/null -H "x-vercel-protection-bypass: $VERCEL_PROTECTION_BYPASS" "$target_url"; then
+                echo "✅ Site is available at $target_url (with bypass token)"
+                break
+              fi
+            else
+              # Fallback to regular request
+              if curl -s -f -o /dev/null "$target_url"; then
+                echo "✅ Site is available at $target_url"
+                break
+              fi
             fi
             echo "⏳ Waiting... (attempt $i/30)"
             sleep 10
           done
+
+      - name: Debug E2E test environment
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ steps.deploy.outputs.production-domain }}
+          VERCEL_PROTECTION_BYPASS: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
+        run: |
+          echo "🔍 E2E Test Debug Info:"
+          echo "PLAYWRIGHT_BASE_URL: $PLAYWRIGHT_BASE_URL"
+          echo "VERCEL_PROTECTION_BYPASS set: $([ -n "$VERCEL_PROTECTION_BYPASS" ] && echo "YES" || echo "NO")"
+
+          # Test the bypass token manually
+          if [ -n "$VERCEL_PROTECTION_BYPASS" ]; then
+            echo "🧪 Testing bypass token with curl..."
+            if curl -s -f -H "x-vercel-protection-bypass: $VERCEL_PROTECTION_BYPASS" "$PLAYWRIGHT_BASE_URL" | head -20; then
+              echo "✅ Bypass token works with curl"
+            else
+              echo "❌ Bypass token failed with curl"
+              echo "Trying without bypass token..."
+              curl -s "$PLAYWRIGHT_BASE_URL" | head -20
+            fi
+          else
+            echo "❌ No bypass token available"
+          fi
+
+      - name: Test Playwright configuration
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ steps.deploy.outputs.production-domain }}
+          VERCEL_PROTECTION_BYPASS: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
+        run: |
+          echo "🧪 Testing Playwright configuration..."
+          node -e "
+            const config = require('./playwright.config.ts');
+            console.log('Base URL:', process.env.PLAYWRIGHT_BASE_URL);
+            console.log('Bypass token available:', !!process.env.VERCEL_PROTECTION_BYPASS);
+            console.log('Extra headers:', JSON.stringify(config.default.use.extraHTTPHeaders, null, 2));
+          "
 
       - name: Run E2E tests against production
         env:
