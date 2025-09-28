@@ -169,11 +169,34 @@ jobs:
           NEXT_TELEMETRY_DISABLED: 1
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
+      - name: Verify Vercel Project Configuration
+        run: |
+          echo "🔍 Vercel Configuration Check:"
+          echo "VERCEL_ORG_ID: $VERCEL_ORG_ID"
+          echo "VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID"
+
+          # Get project info
+          vercel project ls --token=${{ secrets.VERCEL_TOKEN }} | grep -E "(ai-ml-portfolio|portfolio)" || echo "No matching projects found"
+
       - name: Deploy Project Artifacts to Vercel
         id: deploy
         run: |
-          url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
-          echo "production-url=$url" >> $GITHUB_OUTPUT
+          echo "🚀 Deploying to Vercel..."
+          deployment_url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "📦 Deployment URL: $deployment_url"
+          echo "production-url=$deployment_url" >> $GITHUB_OUTPUT
+
+          # Get the actual production domain for this project
+          echo "🌐 Getting production domain..."
+          production_domain=$(vercel project domain ls --token=${{ secrets.VERCEL_TOKEN }} | grep -E "\.vercel\.app|\.com|\.net|\.org" | head -1 | awk '{print $1}')
+
+          if [ -n "$production_domain" ]; then
+            echo "✅ Production domain found: https://$production_domain"
+            echo "production-domain=https://$production_domain" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ No custom domain found, using deployment URL"
+            echo "production-domain=$deployment_url" >> $GITHUB_OUTPUT
+          fi
 
       - name: Setup Node.js for E2E tests
         uses: actions/setup-node@v4
@@ -188,8 +211,26 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Wait for deployment to be available
+        run: |
+          echo "Waiting for deployment to be available..."
+          target_url="${{ steps.deploy.outputs.production-domain }}"
+          echo "Testing URL: $target_url"
+
+          for i in {1..30}; do
+            if curl -s -f -o /dev/null "$target_url"; then
+              echo "✅ Site is available at $target_url"
+              break
+            fi
+            echo "⏳ Waiting... (attempt $i/30)"
+            sleep 10
+          done
+
       - name: Run E2E tests against production
-        run: PLAYWRIGHT_BASE_URL=${{ steps.deploy.outputs.production-url }} npm run test:e2e
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ steps.deploy.outputs.production-domain }}
+          VERCEL_PROTECTION_BYPASS: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
+        run: npm run test:e2e
 
       - name: Notify deployment success
         if: success()
