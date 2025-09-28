@@ -5,14 +5,14 @@
 
 function getEnvVar(key: string, fallback?: string): string {
   const value = process.env[key];
-  
+
   if (!value || value.trim() === '') {
     if (fallback !== undefined) {
       return fallback;
     }
     throw new Error(`Missing required environment variable: ${key}`);
   }
-  
+
   return value.trim();
 }
 

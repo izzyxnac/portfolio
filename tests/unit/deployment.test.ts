@@ -32,7 +32,8 @@ describe('Deployment Configuration', () => {
   it('should have proper site metadata', () => {
     const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'AI/ML Developer Portfolio';
     const siteDescription =
-      process.env.NEXT_PUBLIC_SITE_DESCRIPTION || 'Enterprise AI/ML integration specialist portfolio';
+      process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
+      'Enterprise AI/ML integration specialist portfolio';
 
     // Site name should be reasonable length
     expect(siteName.length).toBeGreaterThan(5);

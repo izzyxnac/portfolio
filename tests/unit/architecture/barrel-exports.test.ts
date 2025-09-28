@@ -54,7 +54,7 @@ const testUtilsBarrelExports = () => {
       expect(dateUtils.formatDate).toBeDefined();
       expect(dateUtils.getRelativeTime).toBeDefined();
       expect(dateUtils.isToday).toBeDefined();
-      
+
       // Then test barrel export
       const utils = await import('@/lib/utils/index');
       expect(utils.formatDate).toBeDefined();
