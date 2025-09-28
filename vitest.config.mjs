@@ -21,6 +21,12 @@ export default defineConfig({
         singleFork: true,
       },
     },
+    environmentOptions: {
+      jsdom: {
+        resources: 'usable',
+        runScripts: 'dangerously',
+      },
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
