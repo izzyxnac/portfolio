@@ -3,7 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
-export default defineConfig({
+const config = defineConfig({
   testDir: './tests/e2e',
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -61,12 +61,16 @@ export default defineConfig({
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
   ],
+});
 
-  /* Run your local production server before starting the tests */
-  webServer: {
+// Only add webServer if no external URL is provided
+if (!process.env.PLAYWRIGHT_BASE_URL) {
+  config.webServer = {
     command: 'npm run build && npm run start',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 180000, // 3 minutes timeout for build + server startup
-  },
-});
+  };
+}
+
+export default config;
