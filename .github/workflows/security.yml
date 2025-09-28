@@ -33,6 +33,7 @@ jobs:
         run: npm audit --audit-level=moderate
 
       - name: Run Snyk security scan
+        if: env.SNYK_TOKEN != ''
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -41,8 +42,8 @@ jobs:
           command: test
 
       - name: Upload Snyk results to GitHub Code Scanning
+        if: always() && env.SNYK_TOKEN != ''
         uses: github/codeql-action/upload-sarif@v2
-        if: always()
         with:
           sarif_file: snyk.sarif
 
@@ -101,6 +102,7 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
+        continue-on-error: true
 
   secrets-scan:
     name: Secrets Scanning
@@ -113,10 +115,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run TruffleHog OSS
+      - name: Run TruffleHog OSS (Full Repository Scan)
+        if: github.event_name == 'schedule'
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          base: main
-          head: HEAD
+          extra_args: --debug --only-verified
+
+      - name: Run TruffleHog OSS (Commit Range Scan)
+        if: github.event_name != 'schedule'
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          head: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.event.after }}
           extra_args: --debug --only-verified

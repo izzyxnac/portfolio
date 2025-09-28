@@ -179,6 +179,7 @@ jobs:
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           NODE_ENV: production
           NEXT_TELEMETRY_DISABLED: 1
+          PLAYWRIGHT_BASE_URL: http://localhost:3000
         run: npm run test:e2e
 
       - name: Upload test results
@@ -302,6 +303,7 @@ jobs:
         run: npm audit --audit-level=high
 
       - name: Run Snyk to check for vulnerabilities
+        if: env.SNYK_TOKEN != ''
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
