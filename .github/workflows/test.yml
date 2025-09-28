@@ -122,6 +122,9 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Install wait-on for server startup
+        run: npm install -g wait-on
+
       - name: Build application
         env:
           NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
@@ -142,16 +145,16 @@ jobs:
           NEXT_TELEMETRY_DISABLED: 1
         run: npm run build
 
-      - name: Start application
+      - name: Start application for E2E tests
         run: |
           npm start &
-          npx wait-on http://localhost:3000
+          npx wait-on http://localhost:3000 --timeout 60000
 
       - name: Run E2E tests
         run: npm run test:e2e
 
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
@@ -197,10 +200,40 @@ jobs:
           NEXT_TELEMETRY_DISABLED: 1
         run: npm run build
 
-      - name: Run Lighthouse CI
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.13.x
+
+      - name: Start application for Lighthouse
         run: |
-          npm install -g @lhci/cli@0.12.x
-          lhci autorun
+          echo "Starting Next.js application..."
+          npm start &
+          SERVER_PID=$!
+          echo "Server PID: $SERVER_PID"
+
+          # Wait for server to be ready with better error handling
+          echo "Waiting for server to be ready..."
+          for i in {1..30}; do
+            if curl -f http://localhost:3000 >/dev/null 2>&1; then
+              echo "Server is ready!"
+              break
+            fi
+            if [ $i -eq 30 ]; then
+              echo "Server failed to start within 30 seconds"
+              # Check server logs
+              echo "Checking if server process is still running..."
+              if kill -0 $SERVER_PID 2>/dev/null; then
+                echo "Server process is running but not responding"
+              else
+                echo "Server process has died"
+              fi
+              exit 1
+            fi
+            echo "Attempt $i/30: Server not ready, waiting..."
+            sleep 2
+          done
+
+      - name: Run Lighthouse CI
+        run: lhci autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
@@ -212,6 +245,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Run npm audit
         run: npm audit --audit-level=high
