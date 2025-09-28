@@ -94,7 +94,7 @@ jobs:
         run: npm install --global vercel@latest
 
       - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.VERCEL_ORG_ID }}
 
       - name: Build Project Artifacts
         env:
@@ -111,12 +111,12 @@ jobs:
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           NODE_ENV: production
           NEXT_TELEMETRY_DISABLED: 1
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.VERCEL_ORG_ID }}
 
       - name: Deploy Project Artifacts to Vercel
         id: deploy
         run: |
-          url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.VERCEL_ORG_ID }})
           echo "preview-url=$url" >> $GITHUB_OUTPUT
 
       - name: Comment PR with preview URL
@@ -150,7 +150,7 @@ jobs:
         run: npm install --global vercel@latest
 
       - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.VERCEL_ORG_ID }}
 
       - name: Build Project Artifacts
         env:
@@ -167,7 +167,7 @@ jobs:
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           NODE_ENV: production
           NEXT_TELEMETRY_DISABLED: 1
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.VERCEL_ORG_ID }}
 
       - name: Verify Vercel Project Configuration
         run: |
@@ -175,20 +175,20 @@ jobs:
           echo "VERCEL_ORG_ID: $VERCEL_ORG_ID"
           echo "VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID"
 
-          # Get project info
-          vercel project ls --token=${{ secrets.VERCEL_TOKEN }} | grep -E "(ai-ml-portfolio|portfolio)" || echo "No matching projects found"
+          # Verify specific project exists
+          vercel project ls --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.VERCEL_ORG_ID }} | grep "$VERCEL_PROJECT_ID" || echo "Project ID $VERCEL_PROJECT_ID not found in organization"
 
       - name: Deploy Project Artifacts to Vercel
         id: deploy
         run: |
           echo "🚀 Deploying to Vercel..."
-          deployment_url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          deployment_url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.VERCEL_ORG_ID }})
           echo "📦 Deployment URL: $deployment_url"
           echo "production-url=$deployment_url" >> $GITHUB_OUTPUT
 
           # Get the actual production domain for this project
           echo "🌐 Getting production domain..."
-          production_domain=$(vercel project domain ls --token=${{ secrets.VERCEL_TOKEN }} | grep -E "\.vercel\.app|\.com|\.net|\.org" | head -1 | awk '{print $1}')
+          production_domain=$(vercel domain ls --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ vars.VERCEL_ORG_ID }} | grep -E "\.vercel\.app|\.com|\.net|\.org" | head -1 | awk '{print $1}')
 
           if [ -n "$production_domain" ]; then
             echo "✅ Production domain found: https://$production_domain"
@@ -209,7 +209,7 @@ jobs:
         run: npm ci
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps > /dev/null 2>&1
 
       - name: Test Playwright configuration
         env:
