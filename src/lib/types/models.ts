@@ -192,3 +192,78 @@ export interface ReferrerAnalytics {
   visits: number;
   percentage: number;
 }
+
+// Personal Profile model
+export interface PersonalProfile {
+  id: string;
+  name: string;
+  title: string;
+  tagline: string;
+  bio: string;
+  location: string;
+  email: string;
+  profileImage: ImageAsset;
+  availability: AvailabilityStatus;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ImageAsset {
+  url: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  placeholder?: string;
+}
+
+export type AvailabilityStatus = 'available' | 'busy' | 'unavailable';
+
+// Professional Journey model
+export interface ProfessionalJourney {
+  id: string;
+  profileId: string;
+  milestones: JourneyMilestone[];
+  achievements: Achievement[];
+  timeline: TimelineEvent[];
+}
+
+export interface JourneyMilestone {
+  id: string;
+  year: string;
+  title: string;
+  description: string;
+  location?: string;
+  type: MilestoneType;
+  importance: 'high' | 'medium' | 'low';
+  tags: string[];
+  order: number;
+}
+
+export type MilestoneType = 'education' | 'career' | 'achievement' | 'certification' | 'project';
+
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  category: AchievementCategory;
+  metrics?: string;
+  icon?: string;
+  date: Date;
+  featured: boolean;
+}
+
+export type AchievementCategory =
+  | 'technical'
+  | 'leadership'
+  | 'innovation'
+  | 'education'
+  | 'recognition';
+
+export interface TimelineEvent {
+  id: string;
+  date: Date;
+  title: string;
+  description: string;
+  type: 'milestone' | 'achievement' | 'project';
+  importance: 'high' | 'medium' | 'low';
+}

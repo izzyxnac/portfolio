@@ -9,3 +9,4 @@
 // export * from './blog';
 
 export * from './hero-data';
+export * from './profile';

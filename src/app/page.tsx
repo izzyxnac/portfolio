@@ -1,7 +1,8 @@
 'use client';
 
 import { HeroSection } from '@/components/sections/hero';
-import { heroData } from '@/data';
+import AboutSection from '@/components/sections/about';
+import { heroData, profileData } from '@/data';
 
 const handleViewProjects = () => {
   // TODO: Navigate to projects page when implemented
@@ -22,6 +23,7 @@ export default function Home() {
         onGetInTouch={handleGetInTouch}
         animated={true}
       />
+      <AboutSection profileData={profileData} />
     </main>
   );
 }

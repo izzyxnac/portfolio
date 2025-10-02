@@ -11,6 +11,6 @@ export const heroData = {
     'Data Engineering',
     'Cloud Architecture',
   ],
-  profileImage: '/images/profile/placeholder.svg',
+  profileImage: '/images/profile/oxcodexo.png',
   profileImageAlt: 'oxcodexo - AI/ML Developer',
 };
