@@ -1,32 +1,32 @@
 // SEO Constants
 // This file contains SEO-related constants and configurations
 
-import { SITE_CONFIG } from './config';
+import { config } from '@/lib/constants/config';
 
 // Default SEO configuration
 export const DEFAULT_SEO = {
-  title: SITE_CONFIG.title,
-  description: SITE_CONFIG.description,
-  keywords: SITE_CONFIG.keywords,
+  title: config.site.title,
+  description: config.site.description,
+  keywords: config.site.keywords,
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: SITE_CONFIG.url,
-    siteName: SITE_CONFIG.name,
-    title: SITE_CONFIG.title,
-    description: SITE_CONFIG.description,
+    url: config.site.url,
+    siteName: config.site.name,
+    title: config.site.title,
+    description: config.site.description,
     images: [
       {
-        url: `${SITE_CONFIG.url}/images/og-default.jpg`,
+        url: `${config.site.url}/images/og-default.jpg`,
         width: 1200,
         height: 630,
-        alt: SITE_CONFIG.title,
+        alt: config.site.title,
       },
     ],
   },
   twitter: {
-    handle: '@yourusername',
-    site: '@yourusername',
+    handle: config.site.author.twitter,
+    site: config.site.author.twitter,
     cardType: 'summary_large_image',
   },
   additionalMetaTags: [
@@ -63,34 +63,29 @@ export const DEFAULT_SEO = {
 // Page-specific SEO configurations
 export const PAGE_SEO = {
   home: {
-    title: `${SITE_CONFIG.title} | Portfolio`,
-    description:
-      'Experienced AI/ML Engineer and Full Stack Developer specializing in intelligent web applications and data-driven solutions.',
-    keywords: [...SITE_CONFIG.keywords, 'portfolio', 'hire', 'freelance'],
+    title: `${config.site.title} | Portfolio`,
+    description: config.site.description,
+    keywords: [...config.site.keywords, 'portfolio', 'hire', 'freelance'],
   },
   about: {
-    title: `About | ${SITE_CONFIG.name}`,
-    description:
-      'Learn about my journey in AI/ML and web development, my technical expertise, and professional experience.',
-    keywords: [...SITE_CONFIG.keywords, 'about', 'experience', 'skills', 'background'],
+    title: `About | ${config.site.name}`,
+    description: config.site.description,
+    keywords: [...config.site.keywords, 'about', 'experience', 'skills', 'background'],
   },
   projects: {
-    title: `Projects | ${SITE_CONFIG.name}`,
-    description:
-      'Explore my portfolio of AI/ML projects, web applications, and technical solutions that solve real-world problems.',
-    keywords: [...SITE_CONFIG.keywords, 'projects', 'portfolio', 'case studies', 'work'],
+    title: `Projects | ${config.site.name}`,
+    description: config.site.description,
+    keywords: [...config.site.keywords, 'projects', 'portfolio', 'case studies', 'work'],
   },
   blog: {
-    title: `Blog | ${SITE_CONFIG.name}`,
-    description:
-      'Technical articles, tutorials, and insights about AI/ML, web development, and emerging technologies.',
-    keywords: [...SITE_CONFIG.keywords, 'blog', 'articles', 'tutorials', 'insights'],
+    title: `Blog | ${config.site.name}`,
+    description: config.site.description,
+    keywords: [...config.site.keywords, 'blog', 'articles', 'tutorials', 'insights'],
   },
   contact: {
-    title: `Contact | ${SITE_CONFIG.name}`,
-    description:
-      'Get in touch for collaboration opportunities, project inquiries, or technical consulting.',
-    keywords: [...SITE_CONFIG.keywords, 'contact', 'hire', 'collaboration', 'consulting'],
+    title: `Contact | ${config.site.name}`,
+    description: config.site.description,
+    keywords: [...config.site.keywords, 'contact', 'hire', 'collaboration', 'consulting'],
   },
 } as const;
 
@@ -99,15 +94,15 @@ export const STRUCTURED_DATA = {
   person: {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    name: SITE_CONFIG.author.name,
-    url: SITE_CONFIG.url,
-    email: SITE_CONFIG.author.email,
-    jobTitle: 'AI/ML Engineer & Full Stack Developer',
+    name: config.site.author.name,
+    url: config.site.url,
+    email: config.site.author.email,
+    jobTitle: config.site.author.jobTitle,
     worksFor: {
       '@type': 'Organization',
       name: 'Freelance',
     },
-    sameAs: [SITE_CONFIG.author.github, SITE_CONFIG.author.linkedin, SITE_CONFIG.author.twitter],
+    sameAs: [config.site.author.github, config.site.author.linkedin, config.site.author.twitter],
     knowsAbout: [
       'Artificial Intelligence',
       'Machine Learning',
@@ -122,46 +117,46 @@ export const STRUCTURED_DATA = {
   website: {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: SITE_CONFIG.name,
-    url: SITE_CONFIG.url,
-    description: SITE_CONFIG.description,
+    name: config.site.name,
+    url: config.site.url,
+    description: config.site.description,
     author: {
       '@type': 'Person',
-      name: SITE_CONFIG.author.name,
+      name: config.site.author.name,
     },
     potentialAction: {
       '@type': 'SearchAction',
-      target: `${SITE_CONFIG.url}/search?q={search_term_string}`,
+      target: `${config.site.url}/search?q={search_term_string}`,
       'query-input': 'required name=search_term_string',
     },
   },
   organization: {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: SITE_CONFIG.name,
-    url: SITE_CONFIG.url,
-    logo: `${SITE_CONFIG.url}/images/logo.png`,
+    name: config.site.name,
+    url: config.site.url,
+    logo: `${config.site.url}/images/logo.png`,
     contactPoint: {
       '@type': 'ContactPoint',
-      email: SITE_CONFIG.author.email,
+      email: config.site.author.email,
       contactType: 'customer service',
     },
-    sameAs: [SITE_CONFIG.author.github, SITE_CONFIG.author.linkedin, SITE_CONFIG.author.twitter],
+    sameAs: [config.site.author.github, config.site.author.linkedin, config.site.author.twitter],
   },
 } as const;
 
 // SEO utility functions
 export const generatePageTitle = (pageTitle?: string): string => {
-  if (!pageTitle) return SITE_CONFIG.title;
-  return `${pageTitle} | ${SITE_CONFIG.name}`;
+  if (!pageTitle) return config.site.title;
+  return `${pageTitle} | ${config.site.name}`;
 };
 
 export const generatePageDescription = (pageDescription?: string): string => {
-  return pageDescription || SITE_CONFIG.description;
+  return pageDescription || config.site.description;
 };
 
 export const generateCanonicalUrl = (path: string): string => {
-  return `${SITE_CONFIG.url}${path}`;
+  return `${config.site.url}${path}`;
 };
 
 export const generateOGImage = (title?: string, description?: string): string => {
@@ -169,5 +164,5 @@ export const generateOGImage = (title?: string, description?: string): string =>
   if (title) params.set('title', title);
   if (description) params.set('description', description);
 
-  return `${SITE_CONFIG.url}/api/og?${params.toString()}`;
+  return `${config.site.url}/api/og?${params.toString()}`;
 };

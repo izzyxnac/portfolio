@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import { config } from '@/lib/config';
+import { config } from '@/lib/constants/config';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -14,10 +14,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: config.site.name,
+  title: config.site.title,
   description: config.site.description,
   openGraph: {
-    title: config.site.name,
+    title: config.site.title,
     description: config.site.description,
     url: config.site.url,
     siteName: config.site.name,

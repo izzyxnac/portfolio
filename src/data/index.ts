@@ -8,5 +8,4 @@
 // export * from './testimonials';
 // export * from './blog';
 
-// Currently empty - data files will be added as they are implemented
-export {};
+export * from './hero-data';

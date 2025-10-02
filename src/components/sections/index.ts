@@ -10,5 +10,7 @@
 // export { ContactSection } from './contact';
 // export { CTASection } from './cta';
 
-// Currently empty - components will be added as they are implemented
-export {};
+// Hero Section
+export { HeroSection } from './hero';
+export { ParticleBackground } from './hero/particles';
+export { TypingAnimation, ParallaxElement, FadeInView, ScaleOnHover } from './hero/animations';

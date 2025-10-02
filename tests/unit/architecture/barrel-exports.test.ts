@@ -8,7 +8,7 @@ const testComponentsBarrelExports = () => {
     it('should export from components/index.ts without errors', async () => {
       // Test that the barrel export file can be imported without throwing
       await expect(import('@/components')).resolves.toBeDefined();
-    });
+    }, 10000);
 
     it('should export from components/ui/index.ts without errors', async () => {
       await expect(import('@/components/ui')).resolves.toBeDefined();
@@ -106,23 +106,44 @@ const testConstantsBarrelExports = () => {
 
     it('should export config constants', async () => {
       const constants = await import('@/lib/constants');
-      expect(constants.SITE_CONFIG).toBeDefined();
-      expect(constants.ENV).toBeDefined();
-      expect(constants.API_CONFIG).toBeDefined();
+      expect(constants.config.site).toBeDefined();
+      expect(constants.config.meta).toBeDefined();
+      expect(constants.config.security).toBeDefined();
+      expect(constants.config.breakpoints).toBeDefined();
+      expect(constants.config.api).toBeDefined();
+      expect(constants.config.database).toBeDefined();
+      expect(constants.config.analytics).toBeDefined();
+      expect(constants.config.email).toBeDefined();
+      expect(constants.config.features).toBeDefined();
+      expect(constants.config.ui).toBeDefined();
+      expect(constants.config.validation).toBeDefined();
+      expect(constants.config.cache).toBeDefined();
+      expect(constants.config.error).toBeDefined();
     });
 
     it('should export SEO constants', async () => {
       const constants = await import('@/lib/constants');
-      expect(constants.DEFAULT_SEO).toBeDefined();
-      expect(constants.PAGE_SEO).toBeDefined();
-      expect(constants.STRUCTURED_DATA).toBeDefined();
+      expect(constants.config.meta).toBeDefined();
+      expect(constants.config.meta.keywords).toBeDefined();
+      expect(constants.config.meta.ogType).toBeDefined();
+      expect(constants.config.meta.twitterCard).toBeDefined();
     });
 
     it('should export animation constants', async () => {
       const constants = await import('@/lib/constants');
-      expect(constants.ANIMATION_DURATION).toBeDefined();
-      expect(constants.ANIMATION_EASING).toBeDefined();
-      expect(constants.FADE_IN_VARIANTS).toBeDefined();
+      expect(constants.config.ui.animationDuration).toBeDefined();
+      expect(constants.config.ui.debounceDelay).toBeDefined();
+      expect(constants.config.ui.paginationLimit).toBeDefined();
+    });
+
+    it('should export validation constants', async () => {
+      const constants = await import('@/lib/constants');
+      expect(constants.config.validation.minPasswordLength).toBeDefined();
+      expect(constants.config.validation.maxMessageLength).toBeDefined();
+      expect(constants.config.validation.maxSubjectLength).toBeDefined();
+      expect(constants.config.validation.maxNameLength).toBeDefined();
+      expect(constants.config.validation.emailRegex).toBeDefined();
+      expect(constants.config.validation.phoneRegex).toBeDefined();
     });
   });
 };

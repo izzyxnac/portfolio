@@ -1,0 +1,39 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="person" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <circle cx="100" cy="100" r="100" fill="url(#bg)" />
+  
+  <!-- Person silhouette -->
+  <g fill="url(#person)">
+    <!-- Head -->
+    <circle cx="100" cy="75" r="25" />
+    <!-- Body -->
+    <ellipse cx="100" cy="140" rx="35" ry="45" />
+  </g>
+  
+  <!-- AI/ML themed elements -->
+  <g stroke="url(#person)" stroke-width="2" fill="none" opacity="0.3">
+    <!-- Neural network nodes -->
+    <circle cx="60" cy="60" r="3" />
+    <circle cx="140" cy="60" r="3" />
+    <circle cx="60" cy="140" r="3" />
+    <circle cx="140" cy="140" r="3" />
+    
+    <!-- Connections -->
+    <line x1="60" y1="60" x2="100" y2="75" />
+    <line x1="140" y1="60" x2="100" y2="75" />
+    <line x1="100" y1="100" x2="60" y2="140" />
+    <line x1="100" y1="100" x2="140" y2="140" />
+  </g>
+</svg>
