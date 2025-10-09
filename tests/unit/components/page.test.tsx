@@ -71,14 +71,14 @@ describe('Home Page', () => {
   it('renders the developer name', () => {
     render(<Home />);
 
-    const name = screen.getByText(heroData.name);
+    const name = screen.getAllByText(heroData.name)[0];
     expect(name).toBeInTheDocument();
   });
 
   it('renders the tagline', () => {
     render(<Home />);
 
-    const tagline = screen.getByText(heroData.tagline);
+    const tagline = screen.getAllByText(heroData.tagline)[0];
     expect(tagline).toBeInTheDocument();
   });
 

@@ -2,7 +2,9 @@
 
 import { HeroSection } from '@/components/sections/hero';
 import AboutSection from '@/components/sections/about';
+import { SkillsSection } from '@/components/sections/skills/skills-section';
 import { heroData, profileData } from '@/data';
+import { skillsData } from '@/data/skills';
 
 const handleViewProjects = () => {
   // TODO: Navigate to projects page when implemented
@@ -24,6 +26,7 @@ export default function Home() {
         animated={true}
       />
       <AboutSection profileData={profileData} />
+      <SkillsSection skillsData={skillsData} />
     </main>
   );
 }

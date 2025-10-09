@@ -267,3 +267,39 @@ export interface TimelineEvent {
   type: 'milestone' | 'achievement' | 'project';
   importance: 'high' | 'medium' | 'low';
 }
+
+// Skills Data Models (Story 2.3)
+export interface SkillsData {
+  id: string;
+  profileId: string;
+  categories: SkillCategory[];
+  lastUpdated: Date;
+}
+
+export interface SkillCategory {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  color: string;
+  skills: Skill[];
+  order: number;
+  featured: boolean;
+}
+
+export interface Skill {
+  id: string;
+  name: string;
+  level: SkillLevel;
+  experience: string;
+  yearsOfExperience: number;
+  proficiencyPercentage: number;
+  description?: string;
+  icon?: string;
+  relatedProjects: string[];
+  certifications: string[];
+  lastUsed: Date;
+  trending: boolean;
+}
+
+export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert';

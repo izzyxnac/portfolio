@@ -7,10 +7,12 @@ test.describe('Hero Section - Integration Tests', () => {
   });
 
   test('displays hero content correctly', async ({ page }) => {
-    await expect(page.getByText(heroData.name)).toBeVisible();
-    await expect(page.getByText(heroData.tagline)).toBeVisible();
+    // Use more specific selectors to target hero section only
+    const heroSection = page.getByLabel('Hero section');
+    await expect(heroSection.getByRole('heading', { name: heroData.name })).toBeVisible();
+    await expect(heroSection.getByText(heroData.tagline)).toBeVisible();
     await expect(
-      page.getByText(new RegExp(heroData.description.split(' ').slice(0, 3).join(' ')))
+      heroSection.getByText(new RegExp(heroData.description.split(' ').slice(0, 3).join(' ')))
     ).toBeVisible();
   });
 
@@ -31,7 +33,12 @@ test.describe('Hero Section - Integration Tests', () => {
   });
 
   test('displays profile image', async ({ page }) => {
-    const profileImage = page.getByAltText(heroData.profileImageAlt);
+    // Target hero section specifically to avoid About section image
+    const heroSection = page.getByLabel('Hero section');
+    const profileImage = heroSection.getByRole('img', {
+      name: heroData.profileImageAlt,
+      exact: true,
+    });
     await expect(profileImage).toBeVisible();
   });
 
@@ -42,15 +49,18 @@ test.describe('Hero Section - Integration Tests', () => {
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
-    await expect(page.getByText(heroData.name)).toBeVisible();
-    await expect(page.getByText('View Projects')).toBeVisible();
+    // Use hero section specific selectors
+    const heroSection = page.getByLabel('Hero section');
+    await expect(heroSection.getByRole('heading', { name: heroData.name })).toBeVisible();
+    await expect(heroSection.getByText('View Projects')).toBeVisible();
   });
 
   test('has proper semantic structure', async ({ page }) => {
     const heroSection = page.getByRole('region', { name: /hero section/i });
     await expect(heroSection).toBeVisible();
 
-    const mainHeading = page.getByRole('heading', { level: 1 });
+    // Target the h1 specifically within hero section
+    const mainHeading = heroSection.getByRole('heading', { level: 1 });
     await expect(mainHeading).toHaveText(heroData.name);
   });
 

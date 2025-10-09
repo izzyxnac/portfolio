@@ -33,6 +33,7 @@ export default function AboutSection({
       id='about'
       className={`bg-gray-50 px-4 py-20 sm:px-6 lg:px-8 dark:bg-gray-900 ${className}`}
       aria-labelledby='about-heading'
+      aria-label='About Me'
     >
       <div className='mx-auto max-w-7xl'>
         <AboutHeader profile={profile} />
