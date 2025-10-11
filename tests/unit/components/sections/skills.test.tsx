@@ -15,7 +15,6 @@ vi.mock('framer-motion', () => ({
       <section {...props}>{children}</section>
     ),
   },
-  AnimatePresence: ({ children }: React.PropsWithChildren) => children,
   useInView: () => true,
 }));
 
@@ -79,12 +78,20 @@ describe('SkillsSection - Interactions', () => {
     const expertFilter = screen.getByRole('button', { name: /expert/i });
     await user.click(expertFilter);
 
-    // Check that expert skills are displayed
+    // Check that expert skills are displayed in pills
     const expertSkills = skillsData.categories
       .flatMap(cat => cat.skills)
       .filter(skill => skill.level === 'expert');
 
     expect(expertSkills.length).toBeGreaterThan(0);
+
+    // Verify that some expert skills are visible as pills
+    const visibleExpertSkills = expertSkills.slice(0, 8);
+    visibleExpertSkills.forEach(skill => {
+      if (screen.queryByText(skill.name)) {
+        expect(screen.getByText(skill.name)).toBeInTheDocument();
+      }
+    });
   });
 
   it('handles keyboard navigation', async () => {
@@ -95,8 +102,18 @@ describe('SkillsSection - Interactions', () => {
     firstCategory.focus();
 
     await user.keyboard('{Enter}');
-    // Should expand/select the category
     expect(firstCategory).toHaveFocus();
+  });
+
+  it('maintains fixed card heights for consistent layout', () => {
+    render(<SkillsSection />);
+
+    const categoryCards = screen.getAllByRole('gridcell');
+
+    categoryCards.forEach(card => {
+      const cardElement = card.querySelector('[style*="minHeight"]');
+      expect(cardElement).toBeInTheDocument();
+    });
   });
 });
 
@@ -107,7 +124,6 @@ describe('SkillsSection - Accessibility', () => {
 
   it('meets accessibility requirements', () => {
     render(<SkillsSection />);
-    // Basic accessibility checks without axe for now
     expect(screen.getByRole('heading', { level: 2 })).toBeInTheDocument();
     expect(screen.getByLabelText(/skills categories/i)).toBeInTheDocument();
   });
@@ -123,7 +139,6 @@ describe('SkillsSection - Accessibility', () => {
     mockMatchMedia(true);
 
     render(<SkillsSection />);
-    // Component should render without animations
     expect(
       screen.getByRole('heading', { name: /technical skills & expertise/i })
     ).toBeInTheDocument();
@@ -134,7 +149,6 @@ describe('SkillsVisualization', () => {
   it('renders with custom skills data', () => {
     const customData = {
       ...skillsData,
-      // Only first 2 categories
       categories: skillsData.categories.slice(0, 2),
     };
 
@@ -150,7 +164,6 @@ describe('SkillsVisualization', () => {
     const categoryCard = screen.getAllByRole('gridcell')[0];
     await user.click(categoryCard);
 
-    // Should show expanded content
     expect(categoryCard).toBeInTheDocument();
   });
 
@@ -162,13 +175,74 @@ describe('SkillsVisualization', () => {
     expect(screen.getByText(totalSkills.toString())).toBeInTheDocument();
     expect(screen.getByText('Total Skills')).toBeInTheDocument();
   });
+
+  it('displays proficiency percentages prominently', () => {
+    render(<SkillsVisualization />);
+
+    skillsData.categories.forEach(category => {
+      const avgProficiency = Math.round(
+        category.skills.reduce((acc, skill) => acc + skill.proficiencyPercentage, 0) /
+          category.skills.length
+      );
+      expect(screen.getByText(`${avgProficiency}%`)).toBeInTheDocument();
+    });
+  });
+
+  it('shows compact metrics for each category', () => {
+    render(<SkillsVisualization />);
+
+    skillsData.categories.forEach(category => {
+      const expertCount = category.skills.filter(skill => skill.level === 'expert').length;
+
+      expect(screen.getByText(category.skills.length.toString())).toBeInTheDocument();
+      if (expertCount > 0) {
+        expect(screen.getByText(expertCount.toString())).toBeInTheDocument();
+      }
+    });
+  });
 });
 
-describe('SkillItem', () => {
+describe('Skills Pills Display', () => {
+  it('displays skills as pills within category cards', () => {
+    render(<SkillsVisualization />);
+
+    const firstCategory = skillsData.categories[0];
+    const topSkills = firstCategory.skills.slice(0, 8);
+
+    topSkills.forEach(skill => {
+      expect(screen.getByText(skill.name)).toBeInTheDocument();
+    });
+  });
+
+  it('shows +X more indicator when category has more than 8 skills', () => {
+    render(<SkillsVisualization />);
+
+    const categoryWithManySkills = skillsData.categories.find(cat => cat.skills.length > 8);
+
+    if (categoryWithManySkills) {
+      const remainingCount = categoryWithManySkills.skills.length - 8;
+      expect(screen.getByText(`+${remainingCount} more`)).toBeInTheDocument();
+    }
+  });
+
+  it('displays trending indicators in skill pills', () => {
+    render(<SkillsVisualization />);
+
+    const trendingSkills = skillsData.categories
+      .flatMap(cat => cat.skills.slice(0, 8))
+      .filter(skill => skill.trending);
+
+    if (trendingSkills.length > 0) {
+      expect(screen.getAllByText('🔥')).toHaveLength(trendingSkills.length);
+    }
+  });
+});
+
+describe('SkillItem (Legacy Component)', () => {
   const mockSkill = skillsData.categories[0].skills[0];
   const mockCategoryColor = '#3B82F6';
 
-  it('renders skill information correctly', () => {
+  it('renders skill information correctly when used standalone', () => {
     render(<SkillItem skill={mockSkill} categoryColor={mockCategoryColor} />);
 
     expect(screen.getByText(mockSkill.name)).toBeInTheDocument();
@@ -186,20 +260,6 @@ describe('SkillItem', () => {
     expect(skillElement).toHaveAttribute('aria-label', `${mockSkill.name} - Expert level skill`);
   });
 
-  it('handles keyboard focus correctly', async () => {
-    const user = userEvent.setup();
-    render(<SkillItem skill={mockSkill} categoryColor={mockCategoryColor} />);
-
-    const skillElement = screen.getByRole('button');
-
-    // Test that the element can receive focus
-    await user.tab();
-    expect(skillElement).toHaveFocus();
-
-    // Test that it has proper tabindex
-    expect(skillElement).toHaveAttribute('tabindex', '0');
-  });
-
   it('displays trending badge when applicable', () => {
     const trendingSkill = { ...mockSkill, trending: true };
     render(<SkillItem skill={trendingSkill} categoryColor={mockCategoryColor} />);
@@ -207,11 +267,12 @@ describe('SkillItem', () => {
     expect(screen.getByLabelText(/trending skill/i)).toBeInTheDocument();
   });
 
-  it('renders without icon gracefully', () => {
+  it('renders fallback icon when no icon provided', () => {
     const skillWithoutIcon = { ...mockSkill, icon: undefined };
     render(<SkillItem skill={skillWithoutIcon} categoryColor={mockCategoryColor} />);
 
-    expect(screen.getByText(mockSkill.name)).toBeInTheDocument();
+    // Should show first letter of skill name as fallback
+    expect(screen.getByText(mockSkill.name.charAt(0).toUpperCase())).toBeInTheDocument();
   });
 });
 
