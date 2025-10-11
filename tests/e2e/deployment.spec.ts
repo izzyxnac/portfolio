@@ -13,7 +13,7 @@ test.describe('Deployment Verification', () => {
   });
 
   test('should have proper meta tags for SEO', async ({ page }: { page: Page }) => {
-    await page.goto(config.site.url);
+    await page.goto(config.site.url || '/');
 
     // Check for essential meta tags
     const metaDescription = page.locator('meta[name="description"]');
@@ -25,6 +25,9 @@ test.describe('Deployment Verification', () => {
 
   test('should have proper Open Graph tags', async ({ page }: { page: Page }) => {
     await page.goto(config.site.url);
+
+    // Wait for page to fully load
+    await page.waitForLoadState('networkidle');
 
     // Check for Open Graph tags
     const ogTitle = page.locator('meta[property="og:title"]');
@@ -38,7 +41,8 @@ test.describe('Deployment Verification', () => {
   });
 
   test('should handle 404 pages gracefully', async ({ page }: { page: Page }) => {
-    const response = await page.goto(config.site.url + '/non-existent-page');
+    const baseUrl = config.site.url;
+    const response = await page.goto(baseUrl + '/non-existent-page');
 
     // Should return 404 status
     expect(response?.status()).toBe(404);

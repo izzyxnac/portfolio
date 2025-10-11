@@ -65,7 +65,12 @@ test.describe('Hero Section - Integration Tests', () => {
   });
 
   test('typing animation is present', async ({ page }) => {
-    const typingContainer = page.locator('[aria-live="polite"]');
+    // Target the specific typing animation element within hero section
+    const heroSection = page.getByLabel('Hero section');
+    const typingContainer = heroSection.locator('[aria-live="polite"]').first();
     await expect(typingContainer).toBeVisible();
+
+    // Verify it contains skill text
+    await expect(typingContainer).toHaveAttribute('aria-label', /Current skill:/);
   });
 });
