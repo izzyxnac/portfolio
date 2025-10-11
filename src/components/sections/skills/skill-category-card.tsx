@@ -1,10 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { SkillCategory, Skill } from '@/lib/types/models';
-import { SkillItem } from './skill-item';
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 
 interface SkillCategoryCardProps {
   category: SkillCategory;
@@ -25,59 +23,33 @@ const useCategoryStats = (filteredSkills: Skill[]) => {
   return { averageProficiency, expertSkillsCount, trendingSkillsCount };
 };
 
-// Category header component
-const CategoryHeader = ({
-  category,
-  isExpanded,
-  setIsExpanded,
-  interactionMode,
-}: {
-  category: SkillCategory;
-  isExpanded: boolean;
-  setIsExpanded: (expanded: boolean) => void;
-  interactionMode: 'hover' | 'click' | 'auto';
-}) => (
-  <div className='mb-4 flex items-center justify-between'>
-    <div className='flex items-center space-x-3'>
-      <div className='text-3xl' role='img' aria-label={`${category.name} icon`}>
-        {category.icon}
-      </div>
-      <div>
-        <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>{category.name}</h3>
-        {category.featured && (
-          <span className='inline-flex items-center rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200'>
-            Featured
-          </span>
-        )}
-      </div>
+// Compact category header component
+const CompactCategoryHeader = ({ category }: { category: SkillCategory }) => (
+  <div className='mb-4 flex items-center space-x-3'>
+    <div
+      className='flex h-10 w-10 items-center justify-center rounded-lg text-xl shadow-sm'
+      style={{ backgroundColor: `${category.color}15`, color: category.color }}
+      role='img'
+      aria-label={`${category.name} icon`}
+    >
+      {category.icon}
     </div>
-
-    {interactionMode === 'click' && (
-      <button
-        onClick={e => {
-          e.stopPropagation();
-          setIsExpanded(!isExpanded);
-        }}
-        className='rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-700'
-        aria-label={isExpanded ? 'Collapse category' : 'Expand category'}
-      >
-        {isExpanded ? (
-          <ChevronUpIcon className='h-5 w-5 text-gray-500' />
-        ) : (
-          <ChevronDownIcon className='h-5 w-5 text-gray-500' />
-        )}
-      </button>
-    )}
+    <div className='flex-1'>
+      <h3 className='text-lg font-bold text-gray-900 dark:text-white'>{category.name}</h3>
+      {category.featured && (
+        <span className='mt-0.5 inline-flex items-center rounded-md bg-gradient-to-r from-blue-500 to-purple-600 px-2 py-0.5 text-xs font-medium text-white'>
+          ⭐ Featured
+        </span>
+      )}
+    </div>
   </div>
 );
 
 export const SkillCategoryCard = ({
   category,
   isSelected,
-  interactionMode,
   filterLevel,
 }: SkillCategoryCardProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   const filteredSkills =
@@ -85,109 +57,113 @@ export const SkillCategoryCard = ({
       ? category.skills
       : category.skills.filter(skill => skill.level === filterLevel);
 
-  const shouldShowDetails =
-    interactionMode === 'hover' ? isHovered : interactionMode === 'click' ? isSelected : true;
-
   const { averageProficiency, expertSkillsCount, trendingSkillsCount } =
     useCategoryStats(filteredSkills);
 
   return (
     <motion.div
-      className={`relative cursor-pointer overflow-hidden rounded-xl border-2 bg-white shadow-lg transition-all duration-300 dark:bg-gray-800 ${
+      className={`group relative cursor-pointer overflow-hidden rounded-2xl bg-white shadow-md transition-all duration-300 hover:shadow-xl dark:bg-gray-800 ${
         isSelected || isHovered
-          ? 'border-blue-500 shadow-xl'
-          : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'
+          ? 'border-transparent shadow-2xl ring-2 ring-blue-500'
+          : 'border border-gray-100 hover:border-gray-200 dark:border-gray-700'
       } `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      whileHover={{ y: -2 }}
-      layout
+      whileHover={{ y: -4, scale: 1.02 }}
+      style={{ minHeight: '320px', height: 'auto' }}
     >
-      <div className='p-6'>
-        <CategoryHeader
-          category={category}
-          isExpanded={isExpanded}
-          setIsExpanded={setIsExpanded}
-          interactionMode={interactionMode}
-        />
+      {/* Gradient overlay for visual appeal */}
+      <div
+        className='absolute inset-0 opacity-5 transition-opacity group-hover:opacity-10'
+        style={{ background: `linear-gradient(135deg, ${category.color}20, transparent)` }}
+      />
 
-        <p className='mb-4 text-sm text-gray-600 dark:text-gray-300'>{category.description}</p>
+      <div className='relative flex h-full flex-col p-6'>
+        <CompactCategoryHeader category={category} />
 
-        <CategoryStats
+        <ModernCategoryStats
           filteredSkills={filteredSkills}
           averageProficiency={averageProficiency}
           expertSkillsCount={expertSkillsCount}
+          trendingSkillsCount={trendingSkillsCount}
+          categoryColor={category.color}
         />
 
-        <CategoryProgressBar
+        <EnhancedProgressBar
           averageProficiency={averageProficiency}
           categoryColor={category.color}
         />
 
-        {trendingSkillsCount > 0 && (
-          <div className='flex items-center space-x-1 text-xs text-orange-600 dark:text-orange-400'>
-            <span>🔥</span>
-            <span>{trendingSkillsCount} trending skills</span>
-          </div>
-        )}
-      </div>
+        {/* Modern Skills Pills Display */}
+        <div className='min-h-0 flex-1'>
+          <SkillsPillsGrid skills={filteredSkills.slice(0, 8)} categoryColor={category.color} />
 
-      <AnimatePresence>
-        {(shouldShowDetails || isExpanded) && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className='border-t border-gray-200 dark:border-gray-700'
-          >
-            <div className='space-y-3 p-6 pt-4'>
-              <h4 className='mb-3 text-sm font-medium text-gray-700 dark:text-gray-300'>
-                Skills in this category:
-              </h4>
-              {filteredSkills.map(skill => (
-                <SkillItem key={skill.id} skill={skill} categoryColor={category.color} />
-              ))}
+          {filteredSkills.length > 8 && (
+            <div className='mt-2 text-center'>
+              <span className='text-xs text-gray-500 dark:text-gray-400'>
+                +{filteredSkills.length - 8} more
+              </span>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </div>
+      </div>
     </motion.div>
   );
 };
 
-// Category statistics component
-const CategoryStats = ({
+// Compact category statistics component
+const ModernCategoryStats = ({
   filteredSkills,
   averageProficiency,
   expertSkillsCount,
+  trendingSkillsCount,
+  categoryColor,
 }: {
   filteredSkills: Skill[];
   averageProficiency: number;
   expertSkillsCount: number;
+  trendingSkillsCount: number;
+  categoryColor: string;
 }) => (
-  <div className='mb-4 grid grid-cols-3 gap-4'>
+  <div className='mb-4 space-y-3'>
+    {/* Primary metric - Proficiency */}
     <div className='text-center'>
-      <div className='text-lg font-bold text-gray-900 dark:text-white'>{filteredSkills.length}</div>
-      <div className='text-xs text-gray-500 dark:text-gray-400'>Skills</div>
-    </div>
-    <div className='text-center'>
-      <div className='text-lg font-bold text-green-600 dark:text-green-400'>
+      <div className='text-2xl font-bold' style={{ color: categoryColor }}>
         {averageProficiency}%
       </div>
-      <div className='text-xs text-gray-500 dark:text-gray-400'>Avg. Proficiency</div>
-    </div>
-    <div className='text-center'>
-      <div className='text-lg font-bold text-purple-600 dark:text-purple-400'>
-        {expertSkillsCount}
+      <div className='text-xs font-medium text-gray-600 dark:text-gray-400'>
+        Overall Proficiency
       </div>
-      <div className='text-xs text-gray-500 dark:text-gray-400'>Expert</div>
+    </div>
+
+    {/* Compact metrics row */}
+    <div className='flex justify-center space-x-4 text-center'>
+      <div>
+        <div className='text-sm font-bold text-gray-900 dark:text-white'>
+          {filteredSkills.length}
+        </div>
+        <div className='text-xs text-gray-500 dark:text-gray-400'>Skills</div>
+      </div>
+      <div>
+        <div className='text-sm font-bold text-emerald-600 dark:text-emerald-400'>
+          {expertSkillsCount}
+        </div>
+        <div className='text-xs text-gray-500 dark:text-gray-400'>Expert</div>
+      </div>
+      {trendingSkillsCount > 0 && (
+        <div>
+          <div className='text-sm font-bold text-orange-600 dark:text-orange-400'>
+            {trendingSkillsCount}
+          </div>
+          <div className='text-xs text-gray-500 dark:text-gray-400'>Trending</div>
+        </div>
+      )}
     </div>
   </div>
 );
 
-// Progress bar component
-const CategoryProgressBar = ({
+// Compact progress bar component
+const EnhancedProgressBar = ({
   averageProficiency,
   categoryColor,
 }: {
@@ -195,18 +171,63 @@ const CategoryProgressBar = ({
   categoryColor: string;
 }) => (
   <div className='mb-4'>
-    <div className='mb-1 flex justify-between text-xs text-gray-500 dark:text-gray-400'>
-      <span>Overall Proficiency</span>
-      <span>{averageProficiency}%</span>
-    </div>
-    <div className='h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700'>
+    <div className='relative h-2 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-700'>
       <motion.div
-        className='h-2 rounded-full'
-        style={{ backgroundColor: categoryColor }}
+        className='h-full rounded-full'
+        style={{
+          background: `linear-gradient(90deg, ${categoryColor}60, ${categoryColor})`,
+        }}
         initial={{ width: 0 }}
         animate={{ width: `${averageProficiency}%` }}
-        transition={{ duration: 1, delay: 0.5 }}
+        transition={{ duration: 1, delay: 0.2, ease: 'easeOut' }}
       />
     </div>
   </div>
 );
+
+// Modern skills pills grid component
+const SkillsPillsGrid = ({ skills, categoryColor }: { skills: Skill[]; categoryColor: string }) => (
+  <div className='space-y-2'>
+    <h4 className='text-xs font-medium text-gray-500 dark:text-gray-400'>Top Skills</h4>
+    <div className='flex flex-wrap gap-1.5 overflow-hidden'>
+      {skills.map(skill => (
+        <SkillPill key={skill.id} skill={skill} categoryColor={categoryColor} />
+      ))}
+    </div>
+  </div>
+);
+
+// Individual skill pill component
+const SkillPill = ({ skill, categoryColor }: { skill: Skill; categoryColor: string }) => {
+  const getProficiencyIntensity = (percentage: number) => {
+    if (percentage >= 90) return '100';
+    if (percentage >= 75) return '80';
+    if (percentage >= 60) return '60';
+    if (percentage >= 40) return '40';
+    return '20';
+  };
+
+  const intensity = getProficiencyIntensity(skill.proficiencyPercentage);
+
+  return (
+    <motion.div
+      className='group relative flex flex-shrink-0 items-center space-x-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-all hover:scale-105'
+      style={{
+        backgroundColor: `${categoryColor}${intensity === '100' ? '' : intensity}`,
+        borderColor: `${categoryColor}40`,
+        color: intensity === '100' ? 'white' : categoryColor,
+        minWidth: 'fit-content',
+        maxWidth: '140px',
+      }}
+      whileHover={{ scale: 1.05 }}
+      title={`${skill.name} - ${skill.proficiencyPercentage}% proficiency`}
+    >
+      {skill.trending && <span className='text-xs text-orange-400'>🔥</span>}
+      <span className='truncate text-xs'>{skill.name}</span>
+      <div
+        className='h-1 w-1 flex-shrink-0 rounded-full'
+        style={{ backgroundColor: intensity === '100' ? 'white' : categoryColor }}
+      />
+    </motion.div>
+  );
+};

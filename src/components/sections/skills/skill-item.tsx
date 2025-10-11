@@ -34,7 +34,14 @@ const useSkillItemLogic = (skill: Skill) => {
 };
 
 const SkillIcon = ({ skill }: { skill: Skill }) => {
-  if (!skill.icon) return null;
+  if (!skill.icon) {
+    // Fallback icon based on skill name first letter
+    return (
+      <div className='flex h-6 w-6 items-center justify-center rounded bg-gray-200 text-xs font-bold text-gray-600 dark:bg-gray-600 dark:text-gray-300'>
+        {skill.name.charAt(0).toUpperCase()}
+      </div>
+    );
+  }
 
   return (
     <div className='h-6 w-6 flex-shrink-0'>
@@ -43,11 +50,71 @@ const SkillIcon = ({ skill }: { skill: Skill }) => {
         alt={`${skill.name} icon`}
         width={24}
         height={24}
-        className='h-full w-full object-contain'
+        className='h-full w-full object-contain transition-transform group-hover:scale-110'
       />
     </div>
   );
 };
+
+// Enhanced skill icon container
+const SkillIconContainer = ({ skill, categoryColor }: { skill: Skill; categoryColor: string }) => (
+  <div className='flex-shrink-0'>
+    <div
+      className='flex h-10 w-10 items-center justify-center rounded-lg shadow-sm transition-transform group-hover:scale-110'
+      style={{ backgroundColor: `${categoryColor}10`, border: `1px solid ${categoryColor}30` }}
+    >
+      <SkillIcon skill={skill} />
+    </div>
+  </div>
+);
+
+// Skill information section
+const SkillInfo = ({
+  skill,
+  levelConfig,
+}: {
+  skill: Skill;
+  levelConfig: { color: string; bg: string; label: string };
+}) => (
+  <div className='min-w-0 flex-1'>
+    <div className='flex items-center space-x-2'>
+      <h5 className='truncate font-semibold text-gray-900 dark:text-white'>{skill.name}</h5>
+      {skill.trending && (
+        <motion.span
+          className='text-orange-500'
+          aria-label='Trending skill'
+          title='Currently trending'
+          animate={{ scale: [1, 1.1, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          🔥
+        </motion.span>
+      )}
+    </div>
+    <div className='mt-1 flex items-center space-x-3'>
+      <span
+        className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${levelConfig.bg} ${levelConfig.color} dark:bg-gray-600 dark:text-gray-200`}
+      >
+        {levelConfig.label}
+      </span>
+      <span className='text-xs font-medium text-gray-500 dark:text-gray-400'>
+        {skill.yearsOfExperience}+ years
+      </span>
+    </div>
+  </div>
+);
+
+// Proficiency display section
+const ProficiencyDisplay = ({ skill, categoryColor }: { skill: Skill; categoryColor: string }) => (
+  <div className='flex-shrink-0 text-right'>
+    <div className='text-lg font-bold' style={{ color: categoryColor }}>
+      {skill.proficiencyPercentage}%
+    </div>
+    <div className='mt-2 w-20'>
+      <SkillProgress percentage={skill.proficiencyPercentage} color={categoryColor} size='sm' />
+    </div>
+  </div>
+);
 
 export const SkillItem = ({ skill, categoryColor }: SkillItemProps) => {
   const { showTooltip, setShowTooltip, levelConfig, handleKeyDown } = useSkillItemLogic(skill);
@@ -55,67 +122,26 @@ export const SkillItem = ({ skill, categoryColor }: SkillItemProps) => {
   return (
     <div className='relative'>
       <motion.div
-        className='flex cursor-pointer items-center justify-between rounded-lg bg-gray-50 p-3 transition-colors duration-200 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-offset-gray-800'
+        className='group flex cursor-pointer items-center justify-between rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition-all duration-200 hover:border-gray-200 hover:shadow-md focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:focus:ring-offset-gray-800'
         tabIndex={0}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
         onFocus={() => setShowTooltip(true)}
         onBlur={() => setShowTooltip(false)}
         onKeyDown={handleKeyDown}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
+        whileHover={{ scale: 1.01, y: -1 }}
+        whileTap={{ scale: 0.99 }}
         role='button'
         aria-label={`${skill.name} - ${levelConfig.label} level skill`}
         aria-describedby={`skill-${skill.id}-details`}
       >
-        <div className='flex min-w-0 flex-1 items-center space-x-3'>
-          <SkillIcon skill={skill} />
-
-          {/* Skill Name and Level */}
-          <div className='min-w-0 flex-1'>
-            <div className='flex items-center space-x-2'>
-              <h5 className='truncate text-sm font-medium text-gray-900 dark:text-white'>
-                {skill.name}
-              </h5>
-              {skill.trending && (
-                <span
-                  className='text-xs text-orange-500'
-                  aria-label='Trending skill'
-                  title='Currently trending'
-                >
-                  🔥
-                </span>
-              )}
-            </div>
-            <div className='mt-1 flex items-center space-x-2'>
-              <span
-                className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${levelConfig.bg} ${levelConfig.color} dark:bg-gray-600 dark:text-gray-200`}
-              >
-                {levelConfig.label}
-              </span>
-              <span className='text-xs text-gray-500 dark:text-gray-400'>
-                {skill.yearsOfExperience}+ years
-              </span>
-            </div>
-          </div>
-
-          {/* Proficiency Percentage */}
-          <div className='flex-shrink-0 text-right'>
-            <div className='text-sm font-semibold text-gray-900 dark:text-white'>
-              {skill.proficiencyPercentage}%
-            </div>
-            <div className='mt-1 w-16'>
-              <SkillProgress
-                percentage={skill.proficiencyPercentage}
-                color={categoryColor}
-                size='sm'
-              />
-            </div>
-          </div>
+        <div className='flex min-w-0 flex-1 items-center space-x-4'>
+          <SkillIconContainer skill={skill} categoryColor={categoryColor} />
+          <SkillInfo skill={skill} levelConfig={levelConfig} />
+          <ProficiencyDisplay skill={skill} categoryColor={categoryColor} />
         </div>
       </motion.div>
 
-      {/* Tooltip */}
       {showTooltip && (
         <SkillTooltip
           skill={skill}
