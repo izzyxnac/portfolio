@@ -30,23 +30,17 @@ vi.mock('framer-motion', () => ({
     canvas: ({ children, ...props }: React.ComponentProps<'canvas'>) => (
       <canvas {...props}>{children}</canvas>
     ),
+    h1: ({ children, ...props }: React.ComponentProps<'h1'>) => <h1 {...props}>{children}</h1>,
+    h2: ({ children, ...props }: React.ComponentProps<'h2'>) => <h2 {...props}>{children}</h2>,
     span: ({ children, ...props }: React.ComponentProps<'span'>) => (
       <span {...props}>{children}</span>
     ),
+    button: ({ children, ...props }: React.ComponentProps<'button'>) => (
+      <button {...props}>{children}</button>
+    ),
   },
-}));
-
-// Mock Next.js Image component
-vi.mock('next/image', () => ({
-  default: ({ src, alt, ...props }: { src: string; alt: string; [key: string]: unknown }) => (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} {...props} />
-  ),
-}));
-
-// Mock the particle background component
-vi.mock('@/components/sections/hero/particles', () => ({
-  ParticleBackground: () => <div data-testid='particle-background' />,
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  useInView: () => true,
 }));
 
 // Mock the typing animation component
