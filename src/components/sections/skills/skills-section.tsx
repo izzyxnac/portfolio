@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { SkillsVisualization } from './skills-viz';
 import { SkillsErrorBoundary } from './skills-error-boundary';
 import { SkillsLoading } from './skills-loading';
-import { SkipNavigation, useReducedMotion } from './accessibility-utils';
+import { useReducedMotion } from './accessibility-utils';
 import { SkillsData } from '@/lib/types/models';
 
 interface SkillsSectionProps {
@@ -17,8 +17,6 @@ export const SkillsSection = ({ skillsData, className = '' }: SkillsSectionProps
 
   return (
     <section id='skills' className={`relative ${className}`} aria-labelledby='skills-heading'>
-      <SkipNavigation />
-
       <SkillsErrorBoundary>
         <Suspense fallback={<SkillsLoading />}>
           <div id='skills-content'>

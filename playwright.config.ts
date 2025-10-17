@@ -49,6 +49,13 @@ const config = defineConfig({
       name: 'firefox',
       use: {
         ...devices['Desktop Firefox'],
+        // Add Firefox-specific settings to handle browser context issues
+        launchOptions: {
+          firefoxUserPrefs: {
+            'browser.sessionstore.restore_on_demand': false,
+            'browser.sessionstore.restore_tabs_lazily': false,
+          },
+        },
         extraHTTPHeaders: process.env.VERCEL_PROTECTION_BYPASS
           ? {
               'x-vercel-protection-bypass': process.env.VERCEL_PROTECTION_BYPASS,

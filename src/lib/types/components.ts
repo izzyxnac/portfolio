@@ -12,24 +12,29 @@ export interface BaseComponentProps {
 
 // Layout component props
 export interface HeaderProps extends BaseComponentProps {
-  sticky?: boolean;
-  transparent?: boolean;
+  absolute?: boolean;
 }
 
 export interface FooterProps extends BaseComponentProps {
   minimal?: boolean;
 }
 
-export interface NavigationProps extends BaseComponentProps {
-  items: NavigationItem[];
-  mobile?: boolean;
-}
-
 export interface NavigationItem {
+  id: string;
   label: string;
   href: string;
   external?: boolean;
-  children?: NavigationItem[];
+  icon?: string;
+}
+
+export interface NavigationProps extends BaseComponentProps {
+  items: NavigationItem[];
+}
+
+export interface MobileMenuProps extends BaseComponentProps {
+  isOpen: boolean;
+  onToggle: () => void;
+  items: NavigationItem[];
 }
 
 // Section component props

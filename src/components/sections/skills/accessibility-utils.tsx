@@ -51,18 +51,6 @@ export const useKeyboardNavigation = (items: string[], onSelect: (item: string) 
   return { focusedIndex, handleKeyDown, setFocusedIndex };
 };
 
-// Component for skip navigation
-export const SkipNavigation = () => {
-  return (
-    <a
-      href='#skills-content'
-      className='sr-only z-50 rounded-lg bg-blue-600 px-4 py-2 text-white focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none'
-    >
-      Skip to skills content
-    </a>
-  );
-};
-
 // Announce changes to screen readers
 export const announceToScreenReader = (message: string) => {
   const announcement = document.createElement('div');

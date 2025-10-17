@@ -18,7 +18,7 @@ const handleGetInTouch = () => {
 
 export default function Home() {
   return (
-    <main>
+    <>
       <HeroSection
         {...heroData}
         onViewProjects={handleViewProjects}
@@ -27,6 +27,6 @@ export default function Home() {
       />
       <AboutSection profileData={profileData} />
       <SkillsSection skillsData={skillsData} />
-    </main>
+    </>
   );
 }

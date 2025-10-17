@@ -31,6 +31,40 @@ export const EXTERNAL_ROUTES = {
   EMAIL: 'mailto:',
 } as const;
 
+// Navigation items for header
+export const NAVIGATION_ITEMS = [
+  {
+    id: 'home',
+    label: 'Home',
+    href: ROUTES.HOME,
+    icon: 'Home',
+  },
+  {
+    id: 'about',
+    label: 'About',
+    href: ROUTES.ABOUT,
+    icon: 'User',
+  },
+  {
+    id: 'projects',
+    label: 'Projects',
+    href: ROUTES.PROJECTS,
+    icon: 'FolderOpen',
+  },
+  {
+    id: 'blog',
+    label: 'Blog',
+    href: ROUTES.BLOG,
+    icon: 'BookOpen',
+  },
+  {
+    id: 'contact',
+    label: 'Contact',
+    href: ROUTES.CONTACT,
+    icon: 'Mail',
+  },
+];
+
 // Route metadata
 export const ROUTE_METADATA = {
   [ROUTES.HOME]: {
