@@ -47,7 +47,7 @@ test.describe('Navigation - Desktop', () => {
       .getByRole('link', { name: 'About' });
 
     // Check if active styles are applied
-    await expect(aboutLink).toHaveClass(/text-blue-400/);
-    await expect(aboutLink).toHaveClass(/bg-white\/10/);
+    await expect(aboutLink).toHaveClass(/text-primary\/80/);
+    await expect(aboutLink).toHaveClass(/bg-accent\/20/);
   });
 });

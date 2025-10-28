@@ -29,6 +29,7 @@ export interface NavigationItem {
 
 export interface NavigationProps extends BaseComponentProps {
   items: NavigationItem[];
+  height?: string;
 }
 
 export interface MobileMenuProps extends BaseComponentProps {

@@ -48,16 +48,8 @@ export type PaginationState = {
   hasPrev: boolean;
 };
 
-// Theme utility types
-export type ThemeMode = 'light' | 'dark' | 'system';
+// Theme utility types (basic color scheme only)
 export type ColorScheme = 'blue' | 'green' | 'purple' | 'orange' | 'red';
-
-export type ThemeConfig = {
-  mode: ThemeMode;
-  colorScheme: ColorScheme;
-  reducedMotion: boolean;
-  fontSize: 'sm' | 'md' | 'lg';
-};
 
 // Animation utility types
 export type AnimationDirection = 'up' | 'down' | 'left' | 'right';

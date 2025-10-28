@@ -28,7 +28,7 @@ export const SkillsSummary = ({ data, isInView }: SkillsSummaryProps) => {
       transition={{ duration: 0.6, delay: 0.8 }}
       className='mt-12 text-center'
     >
-      <div className='mx-auto grid max-w-2xl grid-cols-2 gap-4 md:grid-cols-4'>
+      <div className='mx-auto grid max-w-6xl grid-cols-2 gap-4 md:grid-cols-4'>
         <div className='rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800'>
           <div className='text-2xl font-bold text-blue-600 dark:text-blue-400'>
             {data.categories.length}

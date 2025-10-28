@@ -35,7 +35,7 @@ const CompactCategoryHeader = ({ category }: { category: SkillCategory }) => (
       {category.icon}
     </div>
     <div className='flex-1'>
-      <h3 className='text-lg font-bold text-gray-900 dark:text-white'>{category.name}</h3>
+      <h3 className='text-[1.5rem]! font-bold text-gray-900 dark:text-white'>{category.name}</h3>
       {category.featured && (
         <span className='mt-0.5 inline-flex items-center rounded-md bg-gradient-to-r from-blue-500 to-purple-600 px-2 py-0.5 text-xs font-medium text-white'>
           ⭐ Featured

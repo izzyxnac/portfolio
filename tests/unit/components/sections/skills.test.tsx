@@ -2,29 +2,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import { SkillsSection, SkillsVisualization, SkillItem } from '@/components/sections/skills';
+import { SkillsSection, SkillsVisualization } from '@/components/sections/skills';
 import { skillsData } from '@/data/skills';
 
-// Mock framer-motion to avoid animation issues in tests
-vi.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) => (
-      <div {...props}>{children}</div>
-    ),
-    section: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) => (
-      <section {...props}>{children}</section>
-    ),
-  },
-  useInView: () => true,
-}));
-
-// Mock Next.js Image component
-vi.mock('next/image', () => ({
-  default: ({ src, alt, ...props }: { src: string; alt: string; [key: string]: unknown }) => (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} {...props} />
-  ),
-}));
+// Local mocks removed - using global mocks from vitest.setup.ts
 
 // Helper function to mock window.matchMedia
 const mockMatchMedia = (reducedMotion = false) => {
@@ -239,45 +220,6 @@ describe('Skills Pills Display', () => {
     if (trendingSkills.length > 0) {
       expect(screen.getAllByText('🔥')).toHaveLength(trendingSkills.length);
     }
-  });
-});
-
-describe('SkillItem (Legacy Component)', () => {
-  const mockSkill = skillsData.categories[0].skills[0];
-  const mockCategoryColor = '#3B82F6';
-
-  // Skip SkillItem tests as component is now used internally in pills
-  it.skip('renders skill information correctly when used standalone', () => {
-    render(<SkillItem skill={mockSkill} categoryColor={mockCategoryColor} />);
-
-    expect(screen.getByText(mockSkill.name)).toBeInTheDocument();
-    expect(screen.getByText(`${mockSkill.proficiencyPercentage}%`)).toBeInTheDocument();
-    expect(screen.getByText(`${mockSkill.yearsOfExperience}+ years`)).toBeInTheDocument();
-  });
-
-  it.skip('has proper accessibility attributes for tooltip', () => {
-    render(<SkillItem skill={mockSkill} categoryColor={mockCategoryColor} />);
-
-    const skillElement = screen.getByRole('button');
-
-    // Check that the skill item has proper ARIA attributes for tooltip functionality
-    expect(skillElement).toHaveAttribute('aria-describedby', `skill-${mockSkill.id}-details`);
-    expect(skillElement).toHaveAttribute('aria-label', `${mockSkill.name} - Expert level skill`);
-  });
-
-  it.skip('displays trending badge when applicable', () => {
-    const trendingSkill = { ...mockSkill, trending: true };
-    render(<SkillItem skill={trendingSkill} categoryColor={mockCategoryColor} />);
-
-    expect(screen.getByLabelText(/trending skill/i)).toBeInTheDocument();
-  });
-
-  it.skip('renders fallback icon when no icon provided', () => {
-    const skillWithoutIcon = { ...mockSkill, icon: undefined };
-    render(<SkillItem skill={skillWithoutIcon} categoryColor={mockCategoryColor} />);
-
-    // Should show first letter of skill name as fallback
-    expect(screen.getByText(mockSkill.name.charAt(0).toUpperCase())).toBeInTheDocument();
   });
 });
 

@@ -19,8 +19,8 @@ test.describe('Navigation - Header and Logo', () => {
     await expect(header).toHaveClass(/absolute/);
     await expect(header).toHaveClass(/top-0/);
 
-    // Check header has transparent background
-    await expect(header).toHaveClass(/bg-transparent/);
+    // Check header has background styling (not transparent)
+    await expect(header).toHaveClass(/bg-background\/95/);
   });
 
   test('logo links to homepage', async ({ page }) => {

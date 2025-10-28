@@ -191,11 +191,13 @@ function MobileNavItem({
   const { scrollToSection } = useSmootScroll();
 
   const linkClasses = `
-    group flex items-center px-4 py-4 rounded-2xl text-base font-medium transition-all duration-200 relative overflow-hidden
+    group flex items-center px-4 py-4 rounded-2xl text-base font-medium theme-transition
+    relative overflow-hidden touch-target-recommended no-underline
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
     ${
       isActive
-        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/25'
-        : 'text-foreground hover:bg-muted hover:text-foreground hover:shadow-md hover:scale-[1.02]'
+        ? 'text-primary/80 bg-accent/20 shadow-sm'
+        : 'text-hierarchy-secondary hover:text-hierarchy-primary hover:bg-accent/20 hover:scale-105'
     }
   `.trim();
 
@@ -239,11 +241,13 @@ function DesktopNavItem({ item, isActive = false }: { item: NavigationItem; isAc
   const { scrollToSection } = useSmootScroll();
 
   const linkClasses = `
-    flex items-center px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+    inline-flex items-center justify-center px-4 h-full rounded-xl text-sm font-medium theme-transition
+    no-underline
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
     ${
       isActive
-        ? 'text-blue-400 bg-white/10 shadow-sm'
-        : 'text-white/90 hover:text-white hover:bg-white/10 hover:scale-105'
+        ? 'text-primary/80 bg-accent/20 shadow-sm'
+        : 'text-hierarchy-secondary hover:text-hierarchy-primary hover:bg-accent/10 hover:scale-105'
     }
   `.trim();
 
@@ -269,13 +273,13 @@ function DesktopNavItem({ item, isActive = false }: { item: NavigationItem; isAc
     <Link href={item.href} className={linkClasses} onClick={handleClick}>
       {getIcon(item.icon, 16, 'mr-2 flex-shrink-0')}
       {item.label}
-      {isActive && <div className='ml-2 h-1.5 w-1.5 animate-pulse rounded-full bg-blue-400' />}
+      {isActive && <div className='bg-primary ml-2 h-1.5 w-1.5 animate-pulse rounded-full' />}
     </Link>
   );
 }
 
 // Main Navigation Component
-export function Navigation({ items, className = '', ...props }: NavigationProps) {
+export function Navigation({ items, className = '', height = 'h-10', ...props }: NavigationProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
@@ -298,36 +302,43 @@ export function Navigation({ items, className = '', ...props }: NavigationProps)
   };
 
   return (
-    <div className={`flex items-center ${className}`} {...props}>
+    <div className={`flex items-center justify-center ${height} ${className}`} {...props}>
       {/* Desktop Navigation */}
-      <nav className='hidden lg:flex lg:space-x-1' role='navigation' aria-label='Main navigation'>
-        <ul className='flex space-x-1'>
+      <nav
+        className={`hidden lg:flex lg:items-center lg:justify-center ${height}`}
+        role='navigation'
+        aria-label='Main navigation'
+      >
+        <div className={`flex h-full items-center justify-center space-x-1`}>
           {items.map(item => (
-            <li key={item.id}>
-              <DesktopNavItem item={item} isActive={getIsActive(item)} />
-            </li>
+            <DesktopNavItem key={item.id} item={item} isActive={getIsActive(item)} />
           ))}
-        </ul>
+        </div>
       </nav>
 
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMobileMenu}
-        className='hover:bg-muted/50 rounded-xl p-2.5 transition-all duration-200 hover:scale-105 lg:hidden'
+        className='hover:bg-accent/10 theme-transition touch-target-recommended focus-visible:ring-ring rounded-xl p-2.5 hover:scale-105 focus-visible:ring-2 focus-visible:outline-none lg:hidden'
         aria-label='Open menu'
         aria-expanded={mobileMenuOpen}
         aria-controls='mobile-menu'
       >
-        <Menu size={22} className='text-muted-foreground hover:text-foreground' />
+        <Menu
+          size={22}
+          className='text-hierarchy-secondary hover:text-hierarchy-primary theme-transition'
+        />
       </button>
 
-      {/* Mobile Menu */}
-      <MobileMenu
-        isOpen={mobileMenuOpen}
-        onToggle={toggleMobileMenu}
-        items={items}
-        getIsActive={getIsActive}
-      />
+      {/* Mobile Menu - Only render when open */}
+      {mobileMenuOpen && (
+        <MobileMenu
+          isOpen={mobileMenuOpen}
+          onToggle={toggleMobileMenu}
+          items={items}
+          getIsActive={getIsActive}
+        />
+      )}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { Header } from '@/components/layout/header';
+import { ThemeProvider } from '@/components/layout/theme-provider';
 
 // Mock the Navigation component
 vi.mock('@/components/layout', () => ({
@@ -14,9 +15,18 @@ vi.mock('@/components/layout', () => ({
   ),
 }));
 
+// Helper function to render with ThemeProvider
+const renderWithTheme = (component: React.ReactElement) => {
+  return render(
+    <ThemeProvider defaultTheme='dark' disableTransitionOnChange={true}>
+      {component}
+    </ThemeProvider>
+  );
+};
+
 describe('Header Component', () => {
   it('renders header with correct structure', () => {
-    render(<Header />);
+    renderWithTheme(<Header />);
 
     const header = screen.getByRole('banner');
     expect(header).toBeInTheDocument();
@@ -24,7 +34,7 @@ describe('Header Component', () => {
   });
 
   it('renders logo with correct link', () => {
-    render(<Header />);
+    renderWithTheme(<Header />);
 
     const logo = screen.getByLabelText('Portfolio - Go to homepage');
     expect(logo).toBeInTheDocument();
@@ -32,36 +42,36 @@ describe('Header Component', () => {
   });
 
   it('renders navigation component', () => {
-    render(<Header />);
+    renderWithTheme(<Header />);
 
     const navigation = screen.getByTestId('navigation');
     expect(navigation).toBeInTheDocument();
   });
 
   it('applies absolute positioning by default', () => {
-    render(<Header />);
+    renderWithTheme(<Header />);
 
     const header = screen.getByRole('banner');
     expect(header).toHaveClass('absolute', 'top-0');
   });
 
   it('applies relative positioning when not absolute', () => {
-    render(<Header absolute={false} />);
+    renderWithTheme(<Header absolute={false} />);
 
     const header = screen.getByRole('banner');
     expect(header).toHaveClass('relative');
     expect(header).not.toHaveClass('absolute');
   });
 
-  it('applies transparent background by default', () => {
-    render(<Header />);
+  it('applies background with backdrop blur by default', () => {
+    renderWithTheme(<Header />);
 
     const header = screen.getByRole('banner');
-    expect(header).toHaveClass('bg-transparent');
+    expect(header).toHaveClass('bg-background/95', 'backdrop-blur-md');
   });
 
   it('applies custom className', () => {
-    render(<Header className='custom-class' />);
+    renderWithTheme(<Header className='custom-class' />);
 
     const header = screen.getByRole('banner');
     expect(header).toHaveClass('custom-class');

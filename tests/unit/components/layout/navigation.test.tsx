@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { usePathname } from 'next/navigation';
 import { Navigation } from '@/components/layout/navigation';
+import { ThemeProvider } from '@/components/layout/theme-provider';
 
 // Mock Next.js hooks
 vi.mock('next/navigation', () => ({
@@ -30,6 +31,15 @@ function setupNavigationTest(pathname = '/') {
   return mockUsePathname;
 }
 
+// Helper function to render with ThemeProvider
+const renderWithTheme = (component: React.ReactElement) => {
+  return render(
+    <ThemeProvider defaultTheme='dark' disableTransitionOnChange={true}>
+      {component}
+    </ThemeProvider>
+  );
+};
+
 describe('Navigation Component - Desktop', () => {
   beforeEach(() => {
     setupNavigationTest();
@@ -40,7 +50,7 @@ describe('Navigation Component - Desktop', () => {
   });
 
   it('renders desktop navigation', () => {
-    render(<Navigation items={mockItems} />);
+    renderWithTheme(<Navigation items={mockItems} />);
 
     const nav = screen.getByLabelText('Main navigation');
     expect(nav).toBeInTheDocument();
@@ -55,12 +65,12 @@ describe('Navigation Component - Desktop', () => {
 
   it('highlights active navigation item', () => {
     setupNavigationTest('/about');
-    render(<Navigation items={mockItems} />);
+    renderWithTheme(<Navigation items={mockItems} />);
 
     // Get the About link from desktop navigation specifically
     const desktopNav = screen.getByLabelText('Main navigation');
     const aboutLink = desktopNav.querySelector('a[href="/about"]');
-    expect(aboutLink).toHaveClass('text-blue-400', 'bg-white/10');
+    expect(aboutLink).toHaveClass('text-primary/80', 'bg-accent/20', 'shadow-sm');
   });
 
   it('handles external links correctly', () => {
@@ -68,7 +78,7 @@ describe('Navigation Component - Desktop', () => {
       { id: 'github', label: 'GitHub', href: 'https://github.com', external: true },
     ];
 
-    render(<Navigation items={externalItems} />);
+    renderWithTheme(<Navigation items={externalItems} />);
 
     // Get the GitHub link from desktop navigation specifically
     const desktopNav = screen.getByLabelText('Main navigation');
@@ -79,7 +89,7 @@ describe('Navigation Component - Desktop', () => {
 
   it('supports keyboard navigation', async () => {
     const user = userEvent.setup();
-    render(<Navigation items={mockItems} />);
+    renderWithTheme(<Navigation items={mockItems} />);
 
     // Get the first link in the desktop navigation specifically
     const desktopNav = screen.getByLabelText('Main navigation');
@@ -101,7 +111,7 @@ describe('Navigation Component - Mobile Menu', () => {
   });
 
   it('renders mobile menu button', () => {
-    render(<Navigation items={mockItems} />);
+    renderWithTheme(<Navigation items={mockItems} />);
 
     const menuButton = screen.getByLabelText('Open menu');
     expect(menuButton).toBeInTheDocument();
@@ -110,7 +120,7 @@ describe('Navigation Component - Mobile Menu', () => {
 
   it('opens mobile menu when button is clicked', async () => {
     const user = userEvent.setup();
-    render(<Navigation items={mockItems} />);
+    renderWithTheme(<Navigation items={mockItems} />);
 
     const menuButton = screen.getByLabelText('Open menu');
     await user.click(menuButton);
@@ -121,7 +131,7 @@ describe('Navigation Component - Mobile Menu', () => {
 
   it('closes mobile menu when close button is clicked', async () => {
     const user = userEvent.setup();
-    render(<Navigation items={mockItems} />);
+    renderWithTheme(<Navigation items={mockItems} />);
 
     // Open menu
     const menuButton = screen.getByLabelText('Open menu');
@@ -136,7 +146,7 @@ describe('Navigation Component - Mobile Menu', () => {
 
   it('closes mobile menu when overlay is clicked', async () => {
     const user = userEvent.setup();
-    render(<Navigation items={mockItems} />);
+    renderWithTheme(<Navigation items={mockItems} />);
 
     // Open menu
     const menuButton = screen.getByLabelText('Open menu');
@@ -167,7 +177,7 @@ describe('Navigation Component - Body Scroll', () => {
 
   it('prevents body scroll when mobile menu is open', async () => {
     const user = userEvent.setup();
-    render(<Navigation items={mockItems} />);
+    renderWithTheme(<Navigation items={mockItems} />);
 
     const menuButton = screen.getByLabelText('Open menu');
     await user.click(menuButton);
@@ -177,7 +187,7 @@ describe('Navigation Component - Body Scroll', () => {
 
   it('restores body scroll when mobile menu is closed', async () => {
     const user = userEvent.setup();
-    render(<Navigation items={mockItems} />);
+    renderWithTheme(<Navigation items={mockItems} />);
 
     const menuButton = screen.getByLabelText('Open menu');
     await user.click(menuButton);

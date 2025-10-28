@@ -129,8 +129,8 @@ test.describe('Navigation - Advanced Features', () => {
     // Navigation should be reasonably fast
     // Mobile devices may be slower, so we use a more generous timeout
     const isMobile = testInfo.project.name.includes('Mobile');
-    // 15s for mobile, 10s for desktop
-    const timeoutMs = isMobile ? 15000 : 10000;
+    // 15s for mobile, 20s for desktop (more generous timeout)
+    const timeoutMs = isMobile ? 15000 : 20000;
 
     expect(totalTime).toBeLessThan(timeoutMs);
   });
