@@ -30,6 +30,17 @@ export const metadata: Metadata = {
   metadataBase: new URL(config.site.url),
 };
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: config.site.author.name,
+  url: config.site.url,
+  jobTitle: config.site.author.jobTitle,
+  email: config.site.author.email,
+  sameAs: [config.site.author.github, config.site.author.linkedin],
+  description: config.site.description,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,6 +48,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en' suppressHydrationWarning>
+      <head>
+        <script
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider
           defaultTheme='system'

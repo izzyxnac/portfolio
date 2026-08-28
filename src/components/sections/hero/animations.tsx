@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
 interface TypingAnimationProps {
   skills: string[];
@@ -121,30 +121,14 @@ export const ParallaxElement = ({
   offset = 50,
   className = '',
 }: ParallaxElementProps) => {
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    // Check for reduced motion preference
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (prefersReducedMotion) {
-      return;
-    }
-
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const transform = `translateY(${scrollY * offset * 0.01}px)`;
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, offset]);
+  const springY = useSpring(y, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
   return (
-    <div className={className} style={{ transform }}>
+    <motion.div className={className} style={{ y: springY }}>
       {children}
-    </div>
+    </motion.div>
   );
 };
 

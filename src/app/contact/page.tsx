@@ -1,8 +1,12 @@
-export default function Contact() {
-  return (
-    <div className='container mx-auto px-4 py-16'>
-      <h1 className='mb-8 text-4xl font-bold'>Contact</h1>
-      <p className='text-muted-foreground text-lg'>Get in touch for collaboration opportunities.</p>
-    </div>
-  );
+import type { Metadata } from 'next';
+import ContactClient from './ContactClient';
+
+export const metadata: Metadata = {
+  title: 'Contact | Issam NACIRI',
+  description:
+    'Get in touch with Issam NACIRI for AI/ML collaborations, Secure On-Premise Solutions, or professional inquiries.',
+};
+
+export default function ContactPage() {
+  return <ContactClient />;
 }

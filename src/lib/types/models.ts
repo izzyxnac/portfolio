@@ -202,6 +202,8 @@ export interface PersonalProfile {
   bio: string;
   location: string;
   email: string;
+  github?: string;
+  linkedin?: string;
   profileImage: ImageAsset;
   availability: AvailabilityStatus;
   createdAt: Date;

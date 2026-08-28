@@ -229,7 +229,7 @@ h6,
 /* Paragraph styling */
 p {
   margin-bottom: 1rem;
-  max-width: var(--reading-width-normal);
+  /* max-width: var(--reading-width-normal); */
 }
 
 p:last-child {

@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import { profileData } from '@/data';
 import { PersonalProfile, ProfessionalJourney } from '@/lib/types/models';
@@ -119,13 +121,15 @@ function ContactInfo({ profile }: { profile: PersonalProfile }) {
       </span>
       <span className='flex items-center gap-2'>
         <EmailIcon />
-        <a
-          href={`mailto:${profile.email}`}
-          className='transition-colors hover:text-blue-600 dark:hover:text-blue-400'
+        <button
+          onClick={() => {
+            window.location.href = `mailto:${atob(profile.email)}`;
+          }}
+          className='bg-primary hover:bg-primary/90 focus-visible:ring-primary mt-2 inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium !text-white transition-colors focus-visible:ring-2 focus-visible:outline-none'
           aria-label={`Send email to ${profile.name}`}
         >
-          {profile.email}
-        </a>
+          Email Me
+        </button>
       </span>
     </div>
   );

@@ -1,0 +1,6 @@
+Contact: mailto:izzyxnac@gmail.com
+Expires: 2027-01-01T00:00:00.000Z
+Preferred-Languages: en, fr, ar
+Canonical: https://portfolio.naciri.me/.well-known/security.txt
+Policy: https://portfolio.naciri.me/security
+Hiring: https://portfolio.naciri.me/contact

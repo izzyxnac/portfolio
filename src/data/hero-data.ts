@@ -1,16 +1,21 @@
+
 export const heroData = {
-  name: 'oxcodexo',
-  tagline: 'AI/ML Developer & Enterprise Solutions Architect',
+  name: 'Issam NACIRI',
+  tagline: 'AI Engineer & Full Stack Developer',
   description:
-    'Bridging Enterprise Software with Cutting-Edge AI/ML. Specialized in building scalable machine learning systems, intelligent automation, and data-driven solutions that transform business operations.',
+    'Passionate AI Engineer & Full Stack Developer based in Rabat, Morocco. Specializing in Secure On-Premise Solutions, LLMs, MLOps, and robust Enterprise Software Architectures.',
   skills: [
     'AI/ML Integration',
-    'Full-Stack Development',
+    'Secure On-Premise AI',
     'Enterprise Solutions',
     'Machine Learning',
     'Data Engineering',
     'Cloud Architecture',
+    'Full-Stack Development',
+    'MLOps',
+    'RAG Pipelines',
+    'Enterprise Architecture',
   ],
-  profileImage: '/images/profile/oxcodexo.png',
-  profileImageAlt: 'oxcodexo - AI/ML Developer',
+  profileImage: '/images/profile/izzyxnac.png', // Updated with user image
+  profileImageAlt: 'Issam NACIRI - AI Engineer',
 };

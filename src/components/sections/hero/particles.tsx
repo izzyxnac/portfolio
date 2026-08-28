@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { useBreakpoints } from '@/hooks/use-media-query';
 
 interface ParticleBackgroundProps {
   particleCount?: number;
@@ -116,13 +117,14 @@ const useParticleAnimation = (
   }, [canvasRef, particleCount]);
 };
 
-export const ParticleBackground = ({
-  particleCount = 30,
-  className = '',
-}: ParticleBackgroundProps) => {
+export const ParticleBackground = ({ particleCount, className = '' }: ParticleBackgroundProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { isMobile } = useBreakpoints();
 
-  useParticleAnimation(canvasRef, particleCount);
+  // Optimization: Reduce particle count on mobile
+  const finalParticleCount = particleCount || (isMobile ? 15 : 30);
+
+  useParticleAnimation(canvasRef, finalParticleCount);
 
   return (
     <motion.canvas

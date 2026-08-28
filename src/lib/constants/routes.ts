@@ -52,12 +52,6 @@ export const NAVIGATION_ITEMS = [
     icon: 'FolderOpen',
   },
   {
-    id: 'blog',
-    label: 'Blog',
-    href: ROUTES.BLOG,
-    icon: 'BookOpen',
-  },
-  {
     id: 'contact',
     label: 'Contact',
     href: ROUTES.CONTACT,
