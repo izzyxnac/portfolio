@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import '@/styles/globals/typography.css';
@@ -41,15 +42,19 @@ const jsonLd = {
   description: config.site.description,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const nonce = headersList.get('x-nonce') ?? headersList.get('x-csp-nonce') ?? undefined;
+
   return (
     <html lang='en' suppressHydrationWarning>
       <head>
         <script
+          nonce={nonce}
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />

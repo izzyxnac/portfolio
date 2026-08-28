@@ -12,15 +12,13 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: false,
   },
-  // Security headers - hardened per security scan (2026-08-28)
-  // Notes:
-  // - Removed `unsafe-eval` (not needed for Next.js 15 + React 19 + framer-motion)
-  // - Removed `blob:` from img-src (widens exfil surface; keep only if you upload blobs)
-  // - Added object-src 'none', base-uri, form-action, frame-ancestors, upgrade-insecure-requests
-  // - Kept 'unsafe-inline' for script-src/style-src for compat with Next.js inline bootstrap
-  //   and JSON-LD in layout.tsx:44. To drop it fully, implement nonces via middleware.ts
-  //   (see https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy#adding-a-nonce-with-middleware)
-  // - Removed X-XSS-Protection (deprecated; CSP is the real control)
+  // Security headers - hardened per security scan (2026-08-28) + nonce CSP (2026-08-28 strict)
+  // - CSP now handled by middleware.ts with per-request nonce:
+  //   script-src 'self' 'nonce-{random}' 'strict-dynamic' (no unsafe-inline/unsafe-eval)
+  //   style-src 'self' 'unsafe-inline' (Tailwind requires it)
+  //   img-src 'self' data: https: (no blob:), etc.
+  // - next.config headers keep other hardening as fallback for static assets where middleware matcher excludes
+  // - X-XSS-Protection removed (deprecated)
   async headers() {
     return [
       {
@@ -41,22 +39,6 @@ const nextConfig: NextConfig = {
           {
             key: 'Strict-Transport-Security',
             value: 'max-age=63072000; includeSubDomains; preload',
-          },
-          {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline'",
-              "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: https:",
-              "font-src 'self' data:",
-              "connect-src 'self' https:",
-              "object-src 'none'",
-              "base-uri 'self'",
-              "form-action 'self'",
-              "frame-ancestors 'none'",
-              'upgrade-insecure-requests',
-            ].join('; '),
           },
           {
             key: 'Permissions-Policy',

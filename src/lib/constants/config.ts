@@ -68,16 +68,16 @@ export const config = {
     twitterCard: 'summary_large_image' as const,
   },
 
-  // Security headers configuration - aligned with next.config.ts:42 hardened CSP
+  // Security headers configuration - aligned with middleware.ts nonce CSP (strict, no unsafe-eval/inline for scripts)
   // xssProtection kept for backwards compat but deprecated (CSP is canonical); do not rely on it
   security: {
     contentTypeOptions: process.env.SECURITY_CONTENT_TYPE_OPTIONS || 'nosniff',
     frameOptions: process.env.SECURITY_FRAME_OPTIONS || 'DENY',
     xssProtection: process.env.SECURITY_XSS_PROTECTION || '1; mode=block',
-    // Canonical CSP for tests/monitoring; mirrors next.config.ts
+    // Canonical CSP for tests/monitoring; mirrors middleware.ts (nonce variant uses per-request nonce + strict-dynamic)
     contentSecurityPolicy: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      "script-src 'self' 'nonce-{NONCE}' 'strict-dynamic'",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https:",
       "font-src 'self' data:",
@@ -88,6 +88,8 @@ export const config = {
       "frame-ancestors 'none'",
       'upgrade-insecure-requests',
     ].join('; '),
+    // Helper to build per-request CSP with actual nonce (for tests)
+    cspNonceTemplate: "script-src 'self' 'nonce-{NONCE}' 'strict-dynamic'",
   },
 
   // Responsive breakpoints

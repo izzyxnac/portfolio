@@ -54,7 +54,7 @@ test.describe('Deployment Verification', () => {
   test('should have proper security headers', async ({ page }: { page: Page }) => {
     const response = await page.goto(config.site.url);
 
-    // Check for security headers - hardened per 2026-08-28 scan
+    // Check for security headers - hardened per 2026-08-28 scan + nonce CSP (strict)
     const headers = response?.headers();
 
     expect(headers?.['x-content-type-options']).toBe(config.security.contentTypeOptions);
@@ -68,9 +68,17 @@ test.describe('Deployment Verification', () => {
     expect(csp).toContain("default-src 'self'");
     expect(csp).not.toContain('unsafe-eval');
     expect(csp).not.toContain('blob:');
+    expect(csp).not.toContain("script-src 'self' 'unsafe-inline'");
+    expect(csp).toContain("script-src 'self' 'nonce-");
+    expect(csp).toContain("'strict-dynamic'");
     expect(csp).toContain("object-src 'none'");
     expect(csp).toContain("base-uri 'self'");
     expect(csp).toContain("frame-ancestors 'none'");
+    // x-nonce should be present per request
+    expect(headers?.['x-nonce']).toMatch(/^[a-f0-9]{32}$/);
+    // JSON-LD script should carry same nonce
+    const jsonLd = page.locator('script[type="application/ld+json"]');
+    await expect(jsonLd).toHaveAttribute('nonce', headers?.['x-nonce'] || '');
   });
 
   test('should be mobile responsive', async ({ page }: { page: Page }) => {
