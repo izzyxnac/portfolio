@@ -54,12 +54,23 @@ test.describe('Deployment Verification', () => {
   test('should have proper security headers', async ({ page }: { page: Page }) => {
     const response = await page.goto(config.site.url);
 
-    // Check for security headers
+    // Check for security headers - hardened per 2026-08-28 scan
     const headers = response?.headers();
 
     expect(headers?.['x-content-type-options']).toBe(config.security.contentTypeOptions);
     expect(headers?.['x-frame-options']).toBe(config.security.frameOptions);
-    expect(headers?.['x-xss-protection']).toBe(config.security.xssProtection);
+    // X-XSS-Protection is deprecated and intentionally removed; ensure it's not relied on
+    expect(headers?.['x-xss-protection']).toBeUndefined();
+    expect(headers?.['strict-transport-security']).toBe('max-age=63072000; includeSubDomains; preload');
+    expect(headers?.['referrer-policy']).toBe('strict-origin-when-cross-origin');
+    expect(headers?.['permissions-policy']).toBe('camera=(), microphone=(), geolocation=()');
+    const csp = headers?.['content-security-policy'] || '';
+    expect(csp).toContain("default-src 'self'");
+    expect(csp).not.toContain('unsafe-eval');
+    expect(csp).not.toContain('blob:');
+    expect(csp).toContain("object-src 'none'");
+    expect(csp).toContain("base-uri 'self'");
+    expect(csp).toContain("frame-ancestors 'none'");
   });
 
   test('should be mobile responsive', async ({ page }: { page: Page }) => {

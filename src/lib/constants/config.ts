@@ -29,17 +29,22 @@ export const config = {
 
   // Site configuration
   site: {
-    name: process.env.NEXT_PUBLIC_SITE_NAME || '',
-    title: process.env.NEXT_PUBLIC_SITE_TITLE || '',
-    description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION || '',
-    url: process.env.NEXT_PUBLIC_SITE_URL || '',
+    name: process.env.NEXT_PUBLIC_SITE_NAME || 'Issam NACIRI Portfolio',
+    title:
+      process.env.NEXT_PUBLIC_SITE_TITLE || 'Issam NACIRI | AI Engineer & Full Stack Developer',
+    description:
+      process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
+      'Issam NACIRI — AI Engineer specializing in Secure On-Premise LLMs, RAG pipelines, and MLOps in Rabat, Morocco.',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://portfolio.naciri.me',
     author: {
-      name: process.env.NEXT_PUBLIC_AUTHOR_NAME || '',
-      email: process.env.NEXT_PUBLIC_AUTHOR_EMAIL || '',
-      github: process.env.NEXT_PUBLIC_AUTHOR_GITHUB || '',
-      linkedin: process.env.NEXT_PUBLIC_AUTHOR_LINKEDIN || '',
+      name: process.env.NEXT_PUBLIC_AUTHOR_NAME || 'Issam NACIRI',
+      email: process.env.NEXT_PUBLIC_AUTHOR_EMAIL || 'izzyxnac@gmail.com',
+      github: process.env.NEXT_PUBLIC_AUTHOR_GITHUB || 'https://github.com/izzyxnac',
+      linkedin:
+        process.env.NEXT_PUBLIC_AUTHOR_LINKEDIN ||
+        'https://www.linkedin.com/in/issam-naciri-49609288/',
       twitter: process.env.NEXT_PUBLIC_AUTHOR_TWITTER || '',
-      jobTitle: process.env.NEXT_PUBLIC_AUTHOR_JOB_TITLE || '',
+      jobTitle: process.env.NEXT_PUBLIC_AUTHOR_JOB_TITLE || 'AI Engineer & MLOps Specialist',
     },
     keywords: [
       'AI',
@@ -63,11 +68,26 @@ export const config = {
     twitterCard: 'summary_large_image' as const,
   },
 
-  // Security headers configuration
+  // Security headers configuration - aligned with next.config.ts:42 hardened CSP
+  // xssProtection kept for backwards compat but deprecated (CSP is canonical); do not rely on it
   security: {
     contentTypeOptions: process.env.SECURITY_CONTENT_TYPE_OPTIONS || 'nosniff',
     frameOptions: process.env.SECURITY_FRAME_OPTIONS || 'DENY',
     xssProtection: process.env.SECURITY_XSS_PROTECTION || '1; mode=block',
+    // Canonical CSP for tests/monitoring; mirrors next.config.ts
+    contentSecurityPolicy: [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: https:",
+      "font-src 'self' data:",
+      "connect-src 'self' https:",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'none'",
+      'upgrade-insecure-requests',
+    ].join('; '),
   },
 
   // Responsive breakpoints
