@@ -4,7 +4,7 @@ import { config } from '@/lib/constants/config';
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = config.site.url;
 
-  const routes = ['', '/about', '/projects', '/contact'].map(route => ({
+  const routes = ['', '/about', '/projects', '/contact', '/security'].map(route => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
